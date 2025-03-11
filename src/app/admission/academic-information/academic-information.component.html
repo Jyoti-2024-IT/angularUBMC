@@ -1,0 +1,596 @@
+<form [formGroup]="academicForm" *ngIf="academicForm">
+	<div class="ui-fluid">
+		<div class="ui-g">
+			<div class="ui-g-12 no-padding-top-bottom">
+				<app-informatic-messages [informaticMessages]="msgs"></app-informatic-messages>
+			</div>
+
+			<div class="ui-g-12">
+				<app-admission-steps [activeIndex]="activeIndex"></app-admission-steps>
+			</div>
+			<p-growl [(value)]="alertMsg"></p-growl>
+			<p-growl [(value)]="msgserror"></p-growl>
+			<div class="ui-g-12">
+				<div class="card academic">
+					<h1>Step 2 of 5 - Academic Details (Sr. No. 13 to 16)</h1>
+					<p-table [columns]="cols" [value]="cars" dataKey="vin" [responsive]="true">
+						<ng-template pTemplate="header" let-columns>
+							<tr>
+								<!-- <th style="width: 100px">Serial No</th> -->
+								<th>13. Board/University</th>
+								<th>14. Other Board</th>
+								<th>15. Institute Details</th>
+								<th>16. Subjectwise Marks</th>
+							</tr>
+						</ng-template>
+						<ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+							<tr>
+								<!-- <td style="text-align:center">
+									{{i+1}}
+								</td> -->
+								<td>
+									<span class="ui-column-title">13. Board/University</span>
+									<select class="form-control custom-select" formControlName="boardId"
+										(change)="getPaperList()"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.boardId.invalid && academicForm.controls.boardId.dirty, 'has-success': academicForm.controls.boardId.valid && academicForm.controls.boardId.dirty }">
+										<option [ngValue]="null">Select Board/University</option>
+										<option *ngFor="let o of boardList" [value]="o.id">{{o.name}}</option>
+										<option [value]="-1">Other</option>
+									</select>
+								</td>
+								<td>
+									<!-- formControlName="otherboard" -->
+									<span class="ui-column-title">14. Other Board</span>
+									<input type="text" class="form-control" formControlName="otherBoardName"
+										[readonly]="enableOtherBoard" placeholder="Other Board" pInputText
+										[ngClass]="{ 'ui-state-error': academicForm.controls.otherBoardName.invalid && academicForm.controls.otherBoardName.dirty, 'has-success': academicForm.controls.otherBoardName.valid && academicForm.controls.otherBoardName.dirty }">
+								</td>
+								<td>
+									<button pButton type="button" label="Details Entry"
+										(click)="showInstDetailsDialog()"></button>
+								</td>
+								<td>
+									<button pButton type="button" label="Marks Entry"
+										(click)="showMarksEntryDialog()"></button>
+								</td>
+							</tr>
+						</ng-template>
+					</p-table>
+				</div>
+				<div *ngIf="academicForm.controls.boardId.invalid && academicForm.controls.boardId.dirty">
+					<p style="color:red">Board/University is required.</p>
+				</div>
+				<div *ngIf="academicForm.controls.otherBoardName.invalid && academicForm.controls.otherBoardName.dirty">
+					<p style="color:red">Other Board is required.</p>
+				</div>
+			</div>
+
+			<div class="ui-g-12" *ngIf="showclose">
+				<div class="card no-margin no-padding">
+					<!-- {{this.academicForm.value|json}} -->
+					<button type="button" label="Go to Dashboard" class="indigo-btn btn-lg" (click)="goToDashboard()"
+						pButton></button>
+				</div>
+			</div>
+
+			<div class="ui-g-12" *ngIf="!disablesubmit1">
+				<div class="card no-margin no-padding" *ngIf="!disablesubmit">
+					<!-- {{this.academicForm.value|json}} -->
+					<button type="submit" label="Submit" class="indigo-btn btn-lg" (click)="saveAcademicdetails()"
+						pButton></button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!---------------------------------------------------marks entry----------------------------------------------------- -->
+	<p-dialog header="Marks Entry" [(visible)]="marksEntryDialogDisplay" modal="modal" [responsive]="true"
+		showEffect="fade" [closable]="false" [draggable]="false" [resizable]="false">
+		<div class="card no-padding no-margin">
+			<p-messages [(value)]="msgMarksEntry" [closable]="false" styleClass="general-message"></p-messages>
+		</div>
+		<div class="card">
+			<div class="ui-g form-group">
+				<div class="ui-table ui-widget ui-table-responsive">
+					<p-growl [(value)]="msgserror"></p-growl>
+					<div class="ui-table-wrapper">
+						<!-- theory practical table -->
+						<table formArrayName="subjectDetailInfo" style="width:100%"
+							*ngIf="paperType=='Theory Practical'">
+							<thead class="ui-table-thead">
+								<tr>
+									<th style="width: 5%; text-align: left;">Sl</th>
+									<th style="width: 18%;">Subject</th>
+									<th style="width: 12%;">Total Full Marks</th>
+									<th style="width: 12%;">Total Marks Obtained</th>
+									<th style="width: 12%;display:none;">Theory Full Marks</th>
+									<th style="width: 12%;display:none;">Practical Full Marks</th>
+									<th style="width: 12%;display:none;">Practical Marks Obtained</th>
+									<th style="width: 12%;display:none;">Total Marks Obtained</th>
+									<th style="width: 5%; text-align: right;"></th>
+								</tr>
+							</thead>
+							<tbody class="ui-table-tbody" style="width:100%">
+								<tr *ngFor="let item of academicForm.controls.subjectDetailInfo.controls; let i=index"
+									[formGroupName]="i">
+									<td style="width: 5%;">
+										<span class="ui-column-title">Sl</span>
+										{{i+1}}
+									</td>
+									<td style="width: 18%;">
+										<span class="ui-column-title">Subject</span>
+										<input type="hidden" class="form-control" formControlName="id">
+										<input type="hidden" class="form-control" formControlName="parent_id">
+										<select class="form-control custom-select" (change)="getengpassmarks(i, $event)"
+											formControlName="paperName"
+											style="width:100%!important;background-color:white" *ngIf="i < 1">
+											<option [value]="0">Select Subject</option>
+											<option *ngFor="let o of englishSubjects" [value]="o.id">
+												{{o.paperName.split('~!~')[0]}}</option>
+										</select>
+
+										<select class="form-control custom-select"
+											style="display:none;width:100%!important;background-color:white"
+											*ngIf="i < 1">
+											<option [value]="0">Select Subject</option>
+											<option *ngFor="let o of englishSubjectsHidden" [value]="o.id">
+												{{o.paperName}}</option>
+										</select>
+
+
+										<select class="form-control custom-select" formControlName="paperName"
+											(change)="getallsubpassmarks(i, $event);checkRepeat(i, $event)"
+											style="width:100%!important;background-color:white" *ngIf="i > 0">
+											<option [value]="0">Select Subject</option>
+											<option *ngFor="let o of nonEnglishSubjects" [value]="o.id">
+												{{o.paperName.split('~!~')[0]}}</option>
+										</select>
+
+										<select class="form-control custom-select" (change)="getallpassmarks(i, $event)"
+											style="display:none;width:100%!important;background-color:white"
+											*ngIf="i > 0">
+											<option [value]="0">Select Subject</option>
+											<option *ngFor="let o of nonEnglishSubjectsHidden" [value]="o.id">
+												{{o.paperName}}</option>
+										</select>
+									</td>
+									<td style="width: 12%;">
+										<span class="ui-column-title">Total Full Marks</span>
+										<input type="text" formControlName="fullMarks" pInputText
+											style="width: 100%;text-align:center">
+									</td>
+									<td style="width: 12%;">
+										<span class="ui-column-title">Total Marks Obtained</span>
+										<input type="text" formControlName="theoryMarksobtained" maxlength="3"
+											(keyup)="calculateMarks(i)" appInputRestriction="integer" pInputText
+											style="width: 100%;text-align:center">
+									</td>
+
+									<td style="width: 12%;display:none;">
+										<input type="hidden" [readonly]="true" formControlName="theoryFullMarks"
+											pInputText style="width: 100%;">
+										<input type="hidden" class="form-control" formControlName="theoryPassMarks">
+									</td>
+
+									<td style="width: 12%;display:none;">
+										<input type="hidden" [readonly]="true" formControlName="practicalFullMarks"
+											pInputText style="width: 100%;">
+										<input type="hidden" class="form-control" formControlName="practicalPassMarks">
+									</td>
+									<td style="width: 12%;display:none;">
+										<input type="hidden" formControlName="practicalMarksobtained" maxlength="2"
+											appInputRestriction="integer" (keyup)="calculateMarks(i)" pInputText
+											style="width: 100%;">
+									</td>
+
+									<td style="width: 12%;display:none;">
+										<input type="hidden" [readonly]="true" formControlName="obtainmarks" pInputText
+											style="width: 100%;">
+									</td>
+									<td style="width: 5%;text-align: right;">
+										<button pButton type="button" icon="fa fa-fw fa-close" class="red-btn"
+											(click)="removeMarks(i,id)" *ngIf="i > 3"></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- grade table -->
+						<table formArrayName="subjectDetailInfo" style="width:100%" *ngIf="paperType=='Grade Level'">
+							<thead class="ui-table-thead">
+								<tr>
+									<th style="width: 10%; text-align: left;">Sl</th>
+									<th style="width: 40%;">Subject</th>
+									<th style="width: 20%;">Grade</th>
+									<th style="width: 20%;">Level</th>
+									<th style="width: 10%; text-align: right;"></th>
+								</tr>
+							</thead>
+							<tbody class="ui-table-tbody" style="width:100%">
+								<tr *ngFor="let item of academicForm.controls.subjectDetailInfo.controls; let i=index"
+									[formGroupName]="i">
+									<td style="width: 10%;">
+										{{i+1}}
+									</td>
+									<td style="width: 40%;">
+										<input type="hidden" class="form-control" formControlName="id">
+										<input type="hidden" class="form-control" formControlName="parent_id">
+										<select class="form-control custom-select" formControlName="paperName"
+											style="width:100%!important;background-color:white" *ngIf="i < 1">
+											<option [value]="0">Select Subject</option>
+											<option *ngFor="let o of englishSubjects" [value]="o.id">
+												{{o.paperName.split('~!~')[0]}}</option>
+										</select>
+										<select class="form-control custom-select" formControlName="paperName"
+											(change)="checkRepeat(i, $event)"
+											style="width:100%!important;background-color:white" *ngIf="i > 0">
+											<option [value]="0">Select Subject</option>
+											<option *ngFor="let o of nonEnglishSubjects" [value]="o.id">
+												{{o.paperName.split('~!~')[0]}}</option>
+										</select>
+									</td>
+									<td style="width: 20%;">
+										<select class="form-control custom-select" formControlName="gradeid"
+											style="width:100%!important;background-color:white">
+											<option [value]="0">Select Grade</option>
+											<option *ngFor="let o of gradeList" [value]="o.id">{{o.name}}</option>
+										</select>
+									</td>
+									<td style="width: 20%;">
+										<select class="form-control custom-select" formControlName="levelid"
+											style="width:100%!important;background-color:white">
+											<option [value]="0">Select Level</option>
+											<option *ngFor="let o of levelList" [value]="o.id">{{o.name}}</option>
+										</select>
+									</td>
+									<td style="width: 10%;text-align: right;">
+										<button pButton type="button" icon="fa fa-fw fa-close" class="red-btn"
+											(click)="removeMarks(i,id)" *ngIf="i > 3"></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="ui-table-summary ui-widget-header" style="text-align: left;">
+							<button pButton type="button" icon="fa fa-fw fa-plus" label="Add Row"
+								(click)="addMarks()"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p-footer>
+			<button type="button" pButton icon="fa-check" (click)="donemarksEntry()" label="Done"></button>
+			<button type="button" pButton icon="fa-check" (click)="closemarksEntry()" label="Close"></button>
+		</p-footer>
+	</p-dialog>
+	<!---------------------------------------------------Institute Details----------------------------------------------------- -->
+	<p-dialog header="Institute Details" [(visible)]="instDetailsDialogDisplay" [responsive]="true" modal="modal"
+		showEffect="fade" [closable]="false" [draggable]="false" [resizable]="false">
+		<div class="card no-padding no-margin">
+			<p-messages [(value)]="msgInstDetails" [closable]="false" styleClass="general-message"></p-messages>
+		</div>
+		<p-growl [(value)]="alertMsg"></p-growl>
+		<div class="ui-fluid">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card">
+						<div class="ui-g form-group">
+							<div class="ui-g-12">
+								<label for="regNo">Board Roll No.</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">a.</span>
+									<input type="hidden" class="form-control" formControlName="id">
+									<input type="hidden" class="form-control" formControlName="parent_id">
+									<input type="text" appInputRestriction="noSpecialCharsslash"
+										(keypress)="avoidSpace($event)" class="form-control"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.regno.invalid && academicForm.controls.regno.dirty}"
+										formControlName="regno" placeholder="Board Roll No." (blur)="checkRegNo()"
+										pInputText>
+								</div>
+								<div *ngIf="academicForm.controls.regno.invalid && academicForm.controls.regno.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<!-- *ngIf="!(boardid==2 || boardid==3 || boardid==10 || boardid==118)" -->
+							<!------------------------------------------ ISC ------------------------------------->
+							<!-- [ngClass]="{'required': boardid==2}" -->
+							<!-- <div class="ui-g-12" *ngIf="boardid==2">
+								<label for="uniqueNo">Unique ID.</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">a</span>
+									<input type="text" appInputRestriction="integer"
+										class="form-control" placeholder="Unique ID"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.uniqueNo.invalid && academicForm.controls.uniqueNo.dirty, 'has-success': academicForm.controls.uniqueNo.valid && academicForm.controls.uniqueNo.dirty }"
+										formControlName="uniqueNo" maxlength="7" minlength="6"
+										pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.uniqueNo.invalid && academicForm.controls.uniqueNo.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+                            </div> -->
+
+							<!-- ---------------------------------------- WB ---------------------------------->
+							<!-- [ngClass]="{'required': boardid==3}" -->
+							<!-- <div class="ui-g-12" *ngIf="boardid==3">
+								<label for="wbIdNo">Board Roll No.</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">a</span>
+									<input type="text" appInputRestriction="integer"
+										class="form-control" placeholder="Board Roll No"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.wbIdNo.invalid && academicForm.controls.wbIdNo.dirty, 'has-success': academicForm.controls.wbIdNo.valid && academicForm.controls.wbIdNo.dirty }"
+										formControlName="wbIdNo" maxlength="10" minlength="9"
+										pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.wbIdNo.invalid && academicForm.controls.wbIdNo.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+                            </div> -->
+							<!------------------------------------------ CBSE ---------------------------------->
+							<!-- [ngClass]="{'required': boardid==10}" -->
+							<!-- <div class="ui-g-12" *ngIf="boardid==10">
+								<label for="cbseRollNo">Board Roll No.</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">a</span>
+									<input type="text" appInputRestriction="integer"
+										class="form-control" placeholder="Board Roll No"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.cbseRollNo.invalid && academicForm.controls.cbseRollNo.dirty, 'has-success': academicForm.controls.cbseRollNo.valid && academicForm.controls.cbseRollNo.dirty }"
+										formControlName="cbseRollNo" maxlength="8" minlength="7"
+										pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.cbseRollNo.invalid && academicForm.controls.cbseRollNo.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+                            </div> -->
+							<!---------------------------------------------- NIOS ----------------------------------->
+
+							<!-- [ngClass]="{'required': boardid==118}" -->
+							<!-- <div class="ui-g-12" *ngIf="boardid==118">
+								<label for="niosRollNo" >Board Roll No.</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">a</span>
+									<input type="text" appInputRestriction="integer"
+										class="form-control" placeholder="Board Roll No"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.niosRollNo.invalid && academicForm.controls.niosRollNo.dirty, 'has-success': academicForm.controls.niosRollNo.valid && academicForm.controls.niosRollNo.dirty }"
+										formControlName="niosRollNo" maxlength="12" minlength="11"
+										pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.niosRollNo.invalid && academicForm.controls.niosRollNo.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+                            </div> -->
+							<!--------------------------------------------- END ------------------------------------>
+
+							<!-- <div class="ui-g-12 ui-md-6">
+								<label for="email" class="required">Select Institute</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">b(i).</span>
+									<select class="form-control" formControlName="lastschoolId" [ngClass]="{ 'ui-state-error': academicForm.controls.lastschoolId.invalid && academicForm.controls.lastschoolId.dirty}"
+									 (change)="enableOtherInst()" style="width:100%!important;background-color:white">
+										<option [value]="null">Other Institute</option> -->
+							<!-- <option *ngFor="let o of lastInstituteList" [value]="o.id">{{o.name}}</option> -->
+							<!-- <option [value]="1">Other Institute</option> -->
+							<!-- </select>
+								</div>
+								<div *ngIf="academicForm.controls.lastschoolId.invalid && academicForm.controls.lastschoolId.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div> -->
+							<div class="ui-g-12">
+								<label for="lastschoolName" [ngClass]="{'required': !isOtherInst}">Institute
+									Name</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">b.</span>
+									<input type="text" class="form-control" [readonly]="isOtherInst"
+										formControlName="lastschoolName" placeholder="Institute Name" pInputText
+										[ngClass]="{ 'ui-state-error': academicForm.controls.lastschoolName.invalid && academicForm.controls.lastschoolName.dirty}">
+								</div>
+								<div
+									*ngIf="academicForm.controls.lastschoolName.invalid && academicForm.controls.lastschoolName.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12">
+								<label for="schoolCountryId" class="required">Select Country</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">c</span>
+									<select class="form-control" formControlName="schoolCountryId"
+										style="width:100%!important;background-color:white"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.schoolCountryId.invalid && academicForm.controls.schoolCountryId.dirty}"
+										(change)="getStateCity(this.academicForm.value.schoolCountryId,'-')">
+										<option [ngValue]="null">Select Country</option>
+										<option *ngFor="let o of allcountrylist" [value]="o.id">{{o.name}}</option>
+									</select>
+								</div>
+								<div
+									*ngIf="academicForm.controls.schoolCountryId.invalid && academicForm.controls.schoolCountryId.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="email" class="required">Select State</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">d(i)</span>
+									<select class="form-control" formControlName="stateId"
+										style="width:100%!important;background-color:white"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.stateId.invalid && academicForm.controls.stateId.dirty}"
+										(change)="getStateCity(this.academicForm.value.schoolCountryId,this.academicForm.value.stateId);enableOtherState()">
+										<option [ngValue]="null">Select State</option>
+										<option *ngFor="let o of stateList" [value]="o.id">{{o.name}}</option>
+										<option [value]="-1">Other</option>
+									</select>
+								</div>
+								<div
+									*ngIf="academicForm.controls.stateId.invalid && academicForm.controls.stateId.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="otherSchoolState" [ngClass]="{'required': !isOtherState}">Other
+									State</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">d(ii)</span>
+									<input type="text" class="form-control" [readonly]="isOtherState"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.otherSchoolState.invalid && academicForm.controls.otherSchoolState.dirty}"
+										formControlName="otherSchoolState" placeholder="Other State" pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.otherSchoolState.invalid && academicForm.controls.otherSchoolState.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="schoolcityId" class="required">Select City</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">e(i)</span>
+									<select class="form-control" formControlName="schoolcityId"
+										style="width:100%!important;background-color:white"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.schoolcityId.invalid && academicForm.controls.schoolcityId.dirty}"
+										(change)="enableOtherCity()">
+										<option [ngValue]="null">Select City</option>
+										<option *ngFor="let o of cityList" [value]="o.id">{{o.name}}</option>
+										<option [value]="-1">Other</option>
+									</select>
+								</div>
+								<div
+									*ngIf="academicForm.controls.schoolcityId.invalid && academicForm.controls.schoolcityId.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="dateOfBirth" [ngClass]="{'required': !isOtherCity}">Other City</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">f(ii)</span>
+									<input type="text" class="form-control" [readonly]="isOtherCity"
+										formControlName="otherSchoolCity"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.otherSchoolCity.invalid && academicForm.controls.otherSchoolCity.dirty}"
+										placeholder="Other City" pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.otherSchoolCity.invalid && academicForm.controls.otherSchoolCity.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="mediumofInstruction" class="required">Select Medium</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">g.</span>
+									<select class="form-control" formControlName="mediumofInstruction"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.mediumofInstruction.invalid && academicForm.controls.mediumofInstruction.dirty}"
+										style="width:100%!important;background-color:white">
+										<option [ngValue]="null">Select Medium</option>
+										<option *ngFor="let o of instMediumList" [value]="o.id">{{o.name}}</option>
+									</select>
+								</div>
+								<div
+									*ngIf="academicForm.controls.mediumofInstruction.invalid && academicForm.controls.mediumofInstruction.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="yearofPassing" class="required">Select Year Of Passing</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">h.</span>
+									<select class="form-control" formControlName="yearofPassing"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.yearofPassing.invalid && academicForm.controls.yearofPassing.dirty}"
+										style="width:100%!important;background-color:white">
+										<option [ngValue]="null">Select Year Of Passing</option>
+										<option *ngFor="let o of passingYearList" [value]="o.name">{{o.name}}</option>
+									</select>
+								</div>
+								<!-- (change)="enablePrevuniv()" -->
+								<div
+									*ngIf="academicForm.controls.yearofPassing.invalid && academicForm.controls.yearofPassing.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-6">
+								<label for="sciencebg" class="required">Coming from which Stream</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">i.</span>
+									<select class="form-control" formControlName="sciencebg"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.sciencebg.invalid && academicForm.controls.sciencebg.dirty}"
+										style="width:100%!important;background-color:white">
+										<option [ngValue]="null">Select Stream</option>
+										<option [value]="'Science'">SCIENCE</option>
+										<option [value]="'Commerce'">COMMERCE</option>
+										<option [value]="'Humanities'">HUMANITIES</option>
+									</select>
+								</div>
+								<div
+									*ngIf="academicForm.controls.sciencebg.invalid && academicForm.controls.sciencebg.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+
+							<!-- <div class="ui-g-12 ui-md-6">
+								<label for="prevadmitted" [ngClass]="{'required': !isPrevUniv}">Course under Calcutta University</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">j.</span>
+									<select class="form-control" formControlName="prevadmitted" [attr.disabled]="isPrevUniv?true:null" [ngClass]="{ 'ui-state-error': academicForm.controls.prevadmitted.invalid && academicForm.controls.prevadmitted.dirty}"
+									 (change)="enableCuRegCoursTypPrevClg()" style="width:100%!important;background-color:white">
+										<option [ngValue]="null">Previously admitted in any course under Calcutta University?</option>
+										<option [value]="'YES'">Yes</option>
+										<option [value]="'NO'">No</option>
+									</select>
+								</div>
+								<div *ngIf="academicForm.controls.prevadmitted.invalid && academicForm.controls.prevadmitted.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div> -->
+							<div class="ui-g-12 ui-md-6">
+								<label for="prevregno">Registration No./UID</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">j.</span>
+									<input type="text" class="form-control" formControlName="prevregno"
+										[ngClass]="{ 'ui-state-error': academicForm.controls.prevregno.invalid && academicForm.controls.prevregno.dirty}"
+										placeholder="Registration No./UID" styleClass="inputSize" pInputText>
+								</div>
+								<div
+									*ngIf="academicForm.controls.prevregno.invalid && academicForm.controls.prevregno.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div>
+							<!-- <div class="ui-g-12 ui-md-6">
+								<label for="prevcrshdrid" [ngClass]="{'required': !isCuRegCourseTypePrevColg}">Course Type</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">l.</span>
+									<select class="form-control" formControlName="prevcrshdrid" [attr.disabled]="isCuRegCourseTypePrevColg?true:null" [ngClass]="{ 'ui-state-error': academicForm.controls.prevcrshdrid.invalid && academicForm.controls.prevcrshdrid.dirty}"
+									 style="width:100%!important;background-color:white">
+										<option [ngValue]="null">Select Course Type</option>
+										<option *ngFor="let o of prvcourseTypeList" [value]="o.id">{{o.name}}</option>
+									</select>
+								</div>
+								<div *ngIf="academicForm.controls.prevcrshdrid.invalid && academicForm.controls.prevcrshdrid.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div> -->
+							<!-- <div class="ui-g-12 ui-md-6">
+								<label for="previnstid" [ngClass]="{'required': !isCuRegCourseTypePrevColg}">Previous College</label>
+								<div class="ui-inputgroup">
+									<span class="ui-inputgroup-addon">m.</span>
+									<select class="form-control" formControlName="previnstid" [attr.disabled]="isCuRegCourseTypePrevColg?true:null" [ngClass]="{ 'ui-state-error': academicForm.controls.previnstid.invalid && academicForm.controls.previnstid.dirty}"
+									 style="width:100%!important;background-color:white">
+										<option [ngValue]="null">Select Previous College</option>
+										<option *ngFor="let o of prevCollegeList" [value]="o.id">{{o.name}}</option>
+									</select>
+								</div>
+								<div *ngIf="academicForm.controls.previnstid.invalid && academicForm.controls.previnstid.dirty">
+									<p style="color:red">This field is required.</p>
+								</div>
+							</div> -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p-footer>
+			<button type="button" pButton icon="fa-check" (click)="doneInstituteDetails()" label="Done"></button>
+			<button type="button" pButton icon="fa-check" (click)="closeInstDtls()" label="Close"></button>
+		</p-footer>
+	</p-dialog>
+</form>

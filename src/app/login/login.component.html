@@ -1,0 +1,108 @@
+<div class="body-container">
+	<div class="ui-g">
+		<div class="ui-g-12 ui-lg-6 left-side">
+			<img src="assets/layout/images/Logo UBMC (1).png" alt="apollo-layout" class="logo" />
+			<h1>Online Admission</h1>
+			<h2>Session 2025-2026</h2>
+			<div class="border_text">
+				<p style="font-weight:bolder">
+					If you have not applied for admission yet, then
+					<a class="apply-online" routerLink="admission/general-information" style="font-weight:bolder">Click
+						here to Apply Online.</a>
+				</p>
+				<!-- <p style="font-weight:bolder">Application fee for each course – Rs.500 /-.</p> -->
+			</div>
+			<div class="addLink" style="font-weight: bold;">
+				<p>To check Eligibility Criteria, Courses offered, Subject Combination, Course fees & Scholarship
+					Criteria, Please <a
+						href="http://143.42.129.243:8080/HRCLADM_2023_UBMC/resources/Prospectus_UBMC_2023.pdf"
+						target="_blank">CLICK HERE.</a></p>
+			</div>
+			<div class="addLink" style="font-weight: bold;"> <a
+						href="http://ubmcollege.com/"
+						target="_blank">Click here to go to the College Website.</a>
+			</div>
+
+		</div>
+		<div class="ui-g-12 ui-lg-6 right-side">
+			<div class="login-wrapper">
+				<div class="login-container myStyle">
+					<p-messages [(value)]="msgs"></p-messages>
+					<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+						<span class="title" style="font-weight:bolder;color:yellow;">Login</span>
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-12">
+								<input type="text" class="ui-inputtext ui-widget"
+									[ngClass]="{ 'ui-state-error': loginForm.controls.codenumber.invalid && loginForm.controls.codenumber.dirty, 'has-success': loginForm.controls.codenumber.valid && loginForm.controls.codenumber.dirty }"
+									formControlName="codenumber" maxlength="10" placeholder="Mobile Number" pInputText>
+							</div>
+							<div class="ui-g-12">
+								<input type="password" class="ui-inputtext ui-widget" maxlength="10"
+									[ngClass]="{ 'ui-state-error': loginForm.controls.password.invalid && loginForm.controls.password.dirty, 'has-success': loginForm.controls.password.valid && loginForm.controls.password.dirty }"
+									formControlName="password" placeholder="Password" [feedback]="false" pPassword>
+							</div>
+							<div class="ui-g-6">
+								<button type="submit"
+									class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only indigo-btn">
+									<span class="ui-button-text ui-c">
+										<img src="assets/layout/images/check.svg" alt="login"
+											style="height: 13px;width: 16px;float: left;margin-top: 3px"> Login
+									</span>
+								</button>
+							</div>
+							<div class="ui-g-6 password-container">
+								<a href="#" (click)="showPopupForgotPass()"
+									style="font-weight:bolder;color:yellow;">Forgot Password?</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- <div class="copyright">Copyright &copy; 2020, Hinnovation. All rights reserved.</div> -->
+		</div>
+	</div>
+</div>
+
+<p-dialog header="Forgot Password" [(visible)]="forgotPassDisplay" [modal]="true" [responsive]="true"
+	[baseZIndex]="10000" [draggable]="false" [resizable]="false" [positionTop]="20"
+	[contentStyle]="{'overflow':'visible'}">
+	<div class="ui-g ui-fluid">
+		<form [formGroup]="forgotpassForm" (ngSubmit)="getOtp()" novalidate>
+			<p-confirmDialog></p-confirmDialog>
+			<p-messages [(value)]="msgsForgotPass"></p-messages>
+			<div class="ui-g-12">
+				<input type="text" class="form-control" placeholder="Mobile Number" maxlength="10"
+					formControlName="moblno"
+					[ngClass]="{ 'ui-state-error': forgotpassForm.controls.moblno.invalid && forgotpassForm.controls.moblno.dirty, 'has-success': forgotpassForm.controls.moblno.valid && forgotpassForm.controls.moblno.dirty }"
+					pInputText>
+			</div>
+			<div class="ui-g-12" *ngIf="forgotpassForm.controls.moblno.invalid && forgotpassForm.controls.moblno.dirty">
+				<p style="color:red">Mobile Number is required.</p>
+			</div>
+			<div class="ui-g-12">
+				<p-calendar inputStyleClass="form-control" placeholder="Date of Birth" dateFormat="dd/mm/yy"
+					[minDate]="minDateOfBirth" [maxDate]="maxDateOfBirth" [monthNavigator]="true" [showIcon]="true"
+					[yearNavigator]="true" yearRange="{{minDateOfBirthYear}}:{{maxDateOfBirthYear}}"
+					formControlName="dob" (onInput)="onInputDate($event)" (onBlur)="onBlurDate()"
+					[ngClass]="{ 'ui-state-error': forgotpassForm.controls.dob.invalid && forgotpassForm.controls.dob.dirty, 'has-success': forgotpassForm.controls.dob.valid && forgotpassForm.controls.dob.dirty }">
+				</p-calendar>
+			</div>
+			<div class="ui-g-12" *ngIf="forgotpassForm.controls.dob.invalid && forgotpassForm.controls.dob.dirty">
+				<p style="color:red">Date of Birth is required.</p>
+			</div>
+			<div class="ui-g-12">
+				<button pButton type="submit" label="Get OTP" class="ui-button-raised ui-g-12"></button>
+			</div>
+		</form>
+		<p *ngIf="otpsuccessmsg">Enter the OTP(one-time password) sent to your registered mobile no.</p>
+		<div class="ui-g-12" *ngIf="otpsuccessmsg">
+			<input type="hidden" class="form-control" [(ngModel)]="fid" pInputText>
+			<input type="text" class="form-control" [(ngModel)]="otp" placeholder="Enter OTP" maxlength="6" pInputText>
+			<p *ngIf="otpValidation" style="color:red">Please Enter OTP</p>
+		</div>
+		<div class="ui-g-12" *ngIf="otpsuccessmsg">
+			<button pButton type="button" label="Get Password" (click)="getPass(fid,otp)"
+				class="ui-button-raised ui-g-12"></button>
+		</div>
+	</div>
+</p-dialog>

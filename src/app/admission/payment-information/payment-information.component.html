@@ -1,0 +1,73 @@
+<div class="ui-fluid">
+	<div class="ui-g">
+		<div class="ui-g-12 no-padding-top-bottom">
+			<app-informatic-messages [informaticMessages]="msgs"></app-informatic-messages>
+		</div>
+		<div class="ui-g-12">
+			<app-admission-steps [activeIndex]="activeIndex"></app-admission-steps>
+		</div>
+		<div class="ui-g-12">
+			<div class="card">
+				<h1>Step 5 of 5 – Payment Options (Sr. No. 59)</h1>
+				<h3>59. Payment Information</h3>
+				<div class="ui-g form-group">
+					<div class="ui-g-12 ui-md-8">
+						<label>Payment Type * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">a.</span>
+							<select id="pamentType" class="form-control iconclass" pInputText>
+								 <!-- <option value="Online Payment">Online Payment</option>  -->
+								<option value="Cash">Cash</option>
+							</select>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4">
+						<label>Amount * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">b.</span>
+							<input style="width: 50%;;color: green;" type="text" pInputText placeholder="Price" [readonly]="true" [(ngModel)]="amount">
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="ui-g-12">
+			<div class="card no-margin no-padding">
+				<button type="submit" label="Submit" (click)="payment()" class="indigo-btn btn-lg" pButton></button>
+			</div>
+		</div>
+	</div>
+	<p-dialog [(visible)]="display" *ngIf="display" header="Application Form Submission Successful" [modal]="true" [responsive]="true"
+	 [draggable]="false">
+		<!-- <p style="text-align:center;font-size: 22px;color: red;">CLICK ON THE CHALLAN NUMBER BELOW TO PRINT YOUR CHALLAN(S)</p> -->
+		<p-dataTable let i="rowIndex" [value]="tableData" selectionMode="multiple">
+			<!-- <p-column field="slot1" [header]="'STATUS'"></p-column> -->
+			<p-column field="slot2" [header]="'COURSE'"></p-column>
+			<p-column field="slot3" [header]="'APPLICATION NO.'"></p-column>
+			<p-column field="slot5" [header]="'CHALLAN'">
+				<ng-template let-row="rowData" pTemplate type="body">
+					<a href="{{row.slot5}}" target="_blank">{{row.slot4}}</a>
+				</ng-template>
+			</p-column>
+		</p-dataTable>
+		<a href="{{admitsLink}}" target="_blank">
+			<p style="text-align:center;font-size: 22px;">
+				<u>CLICK HERE TO PRINT APPLICATION FORM</u>
+			</p>
+		</a>
+		<p></p>
+
+		<div class="ui-g-12">
+			<div class="card">
+				<p>NOTE : APPLICATION FORM IS COMMON FOR ALL COURSE(S) APPLIED.</p>
+				<a href="#">
+					<p style="text-align:center;font-size: 22px;color:blue;">CLICK HERE TO LOGIN TO YOUR PORTAL</p>
+				</a>
+			</div>
+		</div>
+		<!-- <p-footer>Powered by Hinnovation Research Centre Pvt. Ltd.</p-footer> -->
+	</p-dialog>
+	<p-dialog [(visible)]="processbar" *ngIf="processbar" header="Please wait ................." [modal]="true" [responsive]="true"
+	 [closable]="false" [draggable]="false" [width]="900">
+	</p-dialog>

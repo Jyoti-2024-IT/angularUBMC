@@ -1,0 +1,389 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="general-information" novalidate>
+	<div class="ui-fluid">
+		<div class="ui-g">
+
+			<div class="ui-g-12 no-padding-top-bottom">
+				<app-informatic-messages [informaticMessages]="msgs"></app-informatic-messages>
+			</div>
+
+			<div class="ui-g-12">
+				<app-admission-steps [activeIndex]="activeIndex"></app-admission-steps>
+			</div>
+
+			<div class="ui-g-12">
+				<div class="card">
+					<!-- <h1>Step 1 of 5 - General Information (Sr. No. 1 to 9)</h1> -->
+					<div class="ui-g form-group">
+						<div class="ui-g-12 ui-md-4">
+							<label for="firstName" class="required">Applicant First Name</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">1</span>
+								<input type="text" class="form-control" (keypress)="avoidNumber($event)"
+									appInputRestriction="noSpecialChars"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.firstName.invalid && registrationForm.controls.firstName.dirty, 'has-success': registrationForm.controls.firstName.valid && registrationForm.controls.firstName.dirty }"
+									formControlName="firstName" placeholder="As per Class XII Board Admit Card"
+									style="text-transform: uppercase;" pInputText>
+								<!-- [readonly]="disabledField" -->
+							</div>
+							<div
+								*ngIf="registrationForm.controls.firstName.invalid && registrationForm.controls.firstName.dirty">
+								<p style="color:red">Applicant First Name is required.</p>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-4">
+							<label for="middleName">Applicant Middle Name</label>
+							<input type="text" class="form-control" (keypress)="avoidNumber($event)"
+								appInputRestriction="noSpecialChars" formControlName="middleName"
+								placeholder="As per Class XII Board Admit Card" style="text-transform: uppercase;"
+								pInputText>
+						</div>
+						<div class="ui-g-12 ui-md-4">
+							<label for="lastName" class="required">Applicant Last Name</label>
+							<input type="text" class="form-control" (keypress)="avoidNumber($event)"
+								appInputRestriction="noSpecialChars"
+								[ngClass]="{ 'ui-state-error': registrationForm.controls.lastName.invalid && registrationForm.controls.lastName.dirty, 'has-success': registrationForm.controls.lastName.valid && registrationForm.controls.lastName.dirty }"
+								formControlName="lastName" placeholder="As per Class XII Board Admit Card"
+								style="text-transform: uppercase;" pInputText>
+							<div
+								*ngIf="registrationForm.controls.lastName.invalid && registrationForm.controls.lastName.dirty">
+								<p style="color:red">Applicant Last Name is required.</p>
+							</div>
+						</div>
+
+						<div class="ui-g-12 ui-md-6">
+							<label for="email" class="required">Email </label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">2</span>
+								<input type="email" class="form-control" (keypress)="avoidSpace($event)"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.email.invalid && registrationForm.controls.email.dirty, 'has-success': registrationForm.controls.email.valid && registrationForm.controls.email.dirty }"
+									formControlName="email" placeholder="Email" pInputText>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.email.invalid && registrationForm.controls.email.dirty">
+								<p style="color:red">Valid Email is required.</p>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-6">
+							<label for="dateOfBirth" class="required">Date of Birth</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">3</span>
+								<p-calendar inputStyleClass="form-control"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.dateOfBirth.invalid && registrationForm.controls.dateOfBirth.dirty, 'has-success': registrationForm.controls.dateOfBirth.valid && registrationForm.controls.dateOfBirth.dirty }"
+									formControlName="dateOfBirth" placeholder="As per Class X Board Admit Card"
+									[minDate]="minDateOfBirth" [maxDate]="maxDateOfBirth" [monthNavigator]="true"
+									[showIcon]="true" dateFormat="dd/mm/yy" [yearNavigator]="true"
+									yearRange="{{minDateOfBirthYear}}:{{maxDateOfBirthYear}}"
+									(onInput)="onInputDate($event)" (onBlur)="onBlurDate()">
+								</p-calendar>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.dateOfBirth.invalid && registrationForm.controls.dateOfBirth.dirty">
+								<p style="color:red">Date of Birth is required.</p>
+							</div>
+						</div>
+
+						<!-- <div class="ui-g-12 ui-md-7">
+							<label for="categoryId" class="required">Select Category(SC/ST/OBC-A/OBC-B certificate issued by West Bengal government will only be recognised.)</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">4</span>
+								<select class="form-control iconclass" formControlName="categoryId" 
+								(change)="onCategorySelected($event.target.value)"
+								 [ngClass]="{ 'ui-state-error': registrationForm.controls.categoryId.invalid && registrationForm.controls.categoryId.dirty, 'has-success': registrationForm.controls.categoryId.valid && registrationForm.controls.categoryId.dirty }"
+								 style="width:100%!important;background-color:white" required>
+									<option [ngValue]="null" selected>Select Category</option>
+									<option *ngFor="let o of categoryList" [value]="o.id">{{o.name}}</option>
+								</select>
+							</div>
+							<div *ngIf="registrationForm.controls.categoryId.invalid && registrationForm.controls.categoryId.dirty">
+								<p style="color:red">Select Category is required.</p>
+							</div>
+						</div> -->
+
+						<!---------------------------Add by JD --------------------------->
+
+						<!-- <form *ngIf="castPopup">
+							<p-dialog [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [draggable]="false"
+							  [resizable]="false" [closable]="false">
+							  <h3>Do You have Caste Certificate?</h3>
+							  <div class="btnText">
+								<p-button label="Yes" styleClass="p-button-text" (click)="yesBtn()"></p-button>
+								<p-button label="No" styleClass="p-button-text" (click)="noBtn()"></p-button>
+							  </div>
+							</p-dialog>
+						  </form>
+
+						  <form *ngIf="noCertificate">
+							<p-dialog [(visible)]="displayModal1" [modal]="true" [style]="{width: '50vw'}" [draggable]="false"
+							  [resizable]="false" [closable]="false">
+							  <h4>Since you do not have a Caste Certificate issued by the Government of West Bengal, you are not eligible to
+								apply under SC/ST/OBC-A/OBC-B Category. Please proceed with your application under General Category.</h4>
+							  <div class="btnText">
+								<p-button label="OK" styleClass="p-button-text" (click)="genCaste()"></p-button>
+							  </div>
+							</p-dialog>
+						  </form>
+
+						  <form *ngIf="selectState">
+							<p-dialog [(visible)]="displayModal2" [modal]="true" [style]="{width: '50vw'}" [draggable]="false"
+							  [resizable]="false" [closable]="false">
+							  <h3>Certificate issued by Which State?</h3>
+							  <div class="btnText">
+								<p-button label="West Bengal" styleClass="p-button-text" (click)="myState()"></p-button>
+								<p-button label="Other State" styleClass="p-button-text" (click)="otherState()"></p-button>
+							  </div>
+							</p-dialog>
+						  </form>
+
+						  <form *ngIf="setGeneralCaste">
+							<p-dialog [(visible)]="displayModal3" [modal]="true" [style]="{width: '50vw'}" [draggable]="false"
+							  [resizable]="false" [closable]="false">
+							  <h3>You will be treated as a general candidate as your certificate is not from West Bengal.</h3>
+							  <div class="btnText">
+								<p-button label="OK" styleClass="p-button-text" (click)="okBtn()"></p-button>
+							  </div>
+							</p-dialog>
+						  </form> -->
+
+						<!--------------------------- End by JD ---------------------------->
+
+
+						<!-- <div class="ui-g-12 ui-md-6">
+							<label for="community" class="required">Do you belong to Maheshwari community?</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">5</span>
+								<select class="form-control iconclass" formControlName="community" [ngClass]="{ 'ui-state-error': registrationForm.controls.community.invalid && registrationForm.controls.community.dirty, 'has-success': registrationForm.controls.community.valid && registrationForm.controls.community.dirty }"
+								 style="width:100%!important;background-color:white" required>
+									<option [ngValue]="null" selected>Do you belong to Maheshwari community?</option>
+									<option *ngFor="let o of communityList" [value]="o.id">{{o.name}}</option>
+								</select>
+							</div>
+							<div *ngIf="registrationForm.controls.community.invalid && registrationForm.controls.community.dirty">
+								<p style="color:red">This field is required.</p>
+							</div>
+						</div> -->
+
+						<div class="ui-g-12 ui-md-6">
+							<label for="sexId" class="required">Select Your Gender</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">4</span>
+								<select class="form-control iconclass" formControlName="sexId"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.sexId.invalid && registrationForm.controls.sexId.dirty, 'has-success': registrationForm.controls.sexId.valid && registrationForm.controls.sexId.dirty }"
+									style="width:100%!important;background-color:white" required>
+									<option [ngValue]="null" selected>Select Your Gender</option>
+									<option *ngFor="let o of genderList" [value]="o.id">{{o.name}}</option>
+								</select>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.sexId.invalid && registrationForm.controls.sexId.dirty">
+								<p style="color:red">Select Your Gender is required.</p>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-6">
+							<label for="studentPersonalContactNo" class="required">Mobile Number (This Mobile Number
+								will be used to contact you for online class and exam.)</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">5</span>
+								<input type="text" appInputRestriction="integer" [readonly]="disabledField"
+									class="form-control"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.studentPersonalContactNo.invalid && registrationForm.controls.studentPersonalContactNo.dirty, 'has-success': registrationForm.controls.studentPersonalContactNo.valid && registrationForm.controls.studentPersonalContactNo.dirty }"
+									formControlName="studentPersonalContactNo"
+									placeholder="All future communication from college will be on this No."
+									(blur)="setLoginType()" maxlength="10" pInputText>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.studentPersonalContactNo.invalid && registrationForm.controls.studentPersonalContactNo.dirty">
+								<p style="color:red">Mobile Number is required.</p>
+							</div>
+						</div>
+
+						<!-- <div class="ui-g-12 ui-md-6">
+							<label for="residentOfBengal" class="required">Are you a resident of Kolkata?</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">8</span>
+								<select class="form-control iconclass" formControlName="residentOfBengal" [ngClass]="{ 'ui-state-error': registrationForm.controls.residentOfBengal.invalid && registrationForm.controls.residentOfBengal.dirty, 'has-success': registrationForm.controls.residentOfBengal.valid && registrationForm.controls.residentOfBengal.dirty }"
+								 style="width:100%!important;background-color:white" required>
+									<option [ngValue]="null" selected>Are you a resident of Kolkata?</option>
+									<option *ngFor="let o of genericList" [value]="o.id">{{o.name}}</option>
+								</select>
+							</div>
+							<div *ngIf="registrationForm.controls.residentOfBengal.invalid && registrationForm.controls.residentOfBengal.dirty">
+								<p style="color:red">This field is required.</p>
+							</div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+
+			<div class="ui-g-12">
+				<div class="card no-margin text-left">
+					<h1>Login Details</h1>
+					<p><b>The mobile number entered above will be your login ID by default in order to access your
+							profile on college website.</b></p>
+					<div class="ui-g form-group">
+						<div class="ui-g-12 ui-md-4">
+							<label for="loginid">Login Id</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">6</span>
+								<input type="text" class="form-control" formControlName="loginid" placeholder="Login Id"
+									[readonly]="true" pInputText>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-4">
+							<label for="password" class="required">Password</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">7</span>
+								<input [type]="show ? 'text' : 'password'" class="form-control"
+									[readonly]="disabledField"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.password.invalid && registrationForm.controls.password.dirty, 'has-success': registrationForm.controls.password.valid && registrationForm.controls.password.dirty }"
+									formControlName="password" placeholder="Password (Max 10 Charecters)" maxlength="10"
+									pPassword>
+								<button pButton type="button" (click)="password()" icon="fa fa-eye"
+									class="ui-button-warn"></button>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.password.invalid && registrationForm.controls.password.dirty">
+								<p style="color:red">Password is required.</p>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-4">
+							<label for="chkpass" class="required">Confirm Password</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">8</span>
+								<input [type]="cnfshow ? 'text' : 'password'" class="form-control"
+									[readonly]="disabledField"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.chkpass.invalid && registrationForm.controls.chkpass.dirty, 'has-success': registrationForm.controls.chkpass.valid && registrationForm.controls.chkpass.dirty }"
+									formControlName="chkpass" placeholder="Confirm Password (Max 10 Charecters)"
+									maxlength="10" pPassword>
+								<button pButton type="button" (click)="cnfpassword()" icon="fa fa-eye"
+									class="ui-button-warn"></button>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.chkpass.invalid && registrationForm.controls.chkpass.dirty">
+								<p style="color:red">Confirm password does not match.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="ui-g-12">
+				<div class="card no-margin">
+					<h1>Application To</h1>
+					<div class="ui-g form-group">
+						<div class="ui-g-12">
+							<label for="applevel" class="required">Select Degree</label>
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon">9</span>
+								<select class="form-control iconclass" formControlName="applevel"
+									[ngClass]="{ 'ui-state-error': registrationForm.controls.applevel.invalid && registrationForm.controls.applevel.dirty, 'has-success': registrationForm.controls.applevel.valid && registrationForm.controls.applevel.dirty }"
+									style="width:100%!important;background-color:white" required>
+									<option [ngValue]="null" selected>Select Degree</option>
+									<option *ngFor="let o of applicationTo" [value]="o.id">{{o.name}}</option>
+								</select>
+							</div>
+							<div
+								*ngIf="registrationForm.controls.applevel.invalid  && registrationForm.controls.applevel.dirty">
+								<p style="color:red">Select Degree is required.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- <div class="ui-g-12" *ngIf="!disabledField && !getOTPbutton">
+				<div class="card no-margin no-padding">
+					<button type="submit" label="Submit" class="indigo-btn btn-lg" pButton></button>
+				</div>
+			</div>
+
+			<div class="ui-g-12" *ngIf="disabledField && !getOTPbutton">
+				<div class="card no-margin no-padding">
+					<button type="submit" label="Submit" class="indigo-btn btn-lg" pButton></button>
+				</div>
+			</div> -->
+
+			<div class="ui-g-12" *ngIf="!disabledField">
+				<div class="card no-margin no-padding">
+					<button type="submit" label="Submit" class="indigo-btn btn-lg" pButton></button>
+				</div>
+			</div>
+
+			<!-- <div class="ui-g-12" *ngIf="disabledField && !getOTPbutton">
+				<div class="card no-margin no-padding">
+					<button type="submit" label="Go to Dashboard" class="indigo-btn btn-lg" pButton
+						(click)="goToDashboard()"></button>
+				</div>
+			</div>
+			<div class="ui-g-12" *ngIf="getOTPbutton">
+				<div class="card no-margin no-padding">
+					<button type="button" label="Get OTP" class="indigo-btn btn-lg" pButton
+						(click)="showOTPDialog()"></button>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</form>
+<p-dialog header="Registration" [(visible)]="registrationMessageDisplay" [closeOnEscape]="false" [closable]="false"
+	modal="modal" showEffect="fade">
+	<div>{{registrationResponseMessage}}</div>
+	<p-footer>
+		<button type="button" pButton icon="fa-check" (click)="registrationMessageClose()" label="OK"></button>
+	</p-footer>
+</p-dialog>
+
+<!-- ========================Get Otp Dialog Start==================================== -->
+<p-dialog [(visible)]="displayOTPbox" [modal]="true" [responsive]="true" [baseZIndex]="10000" [draggable]="false"
+	[resizable]="false" [positionTop]="20" [contentStyle]="{'overflow':'visible'}">
+
+	<form [formGroup]="otpForm" (ngSubmit)="onOtpSubmit()" novalidate autocomplete="off">
+		<div class="ui-g-12">
+			<div class="card center-card">
+
+				<!-- <h1 style="text-align: center; border-bottom: 1px solid #7ecbee;">Change Password</h1> -->
+
+				<div class="ui-g form-group">
+
+					<div class="ui-g-12 ui-md-12" style="margin-left: 25%;">
+						<p style="color: red; font-size: large; font-weight: bold;">OTP sent to your mobile & e-mail.
+						</p>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" style="margin-left: 25%;">
+
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon"><i class="fa fa-key"></i></span>
+							<input type="text" class="form-control" style="width: 211px;" formControlName="otpfield"
+								placeholder="Insert OTP">
+						</div>
+						<div>
+							<!-- Minute Left : {{ count }} -->
+							<p style="color:rgb(49, 47, 179); font-size: large;"> This OTP is Valid For 15 Mins. </p>
+						</div>
+						<div *ngIf="otpForm.controls.otpfield.invalid && otpForm.controls.otpfield.dirty">
+							<p style="color:red; font-size: 22px;">OTP is required.</p>
+						</div>
+					</div>
+
+
+
+					<div class="ui-g-12 ui-md-6" style="margin-left: 25%;">
+						<div class="card no-margin no-padding" style="width: 63%;">
+							<button type="submit" label="Verify OTP" style="width: 244px;" class="blue-btn btn-lg"
+								pButton></button>
+						</div>
+					</div>
+
+					<!-- <div class="ui-g-12 ui-md-6" style="margin-left: 25%;">
+          <div class="card no-margin no-padding" style="width: 63%;">
+            <button type="button" label="Close" style="width: 244px;" (click)="closeOtpBox()" class="blue-btn btn-lg" pButton></button>
+          </div>
+        </div> -->
+
+				</div>
+
+			</div>
+		</div>
+	</form>
+
+</p-dialog>
+<!-- =============================Get Otp Dialog End================================= -->

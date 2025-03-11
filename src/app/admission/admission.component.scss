@@ -1,0 +1,25 @@
+:host {
+  ::ng-deep {
+    .hrcl-informatic-message {
+      @at-root {
+        .layout-wrapper .layout-content .layout-content-container {
+          padding-top: 140px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  :host {
+    ::ng-deep {
+      .hrcl-informatic-message {
+        @at-root {
+          .layout-wrapper .layout-content .layout-content-container {
+            padding-top: 50px;
+          }
+        }
+      }
+    }
+  }
+}

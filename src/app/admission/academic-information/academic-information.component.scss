@@ -1,0 +1,78 @@
+label {
+  display: inline-block;
+  padding: 5px 0;
+  margin-bottom: 5px;
+  color: #676767;
+}
+.no-padding-top-bottom {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+// body .ui-messages.ui-messages-info {
+//  color: #fff;
+// }
+
+:host {
+  ::ng-deep {
+    .ui-inputgroup{
+      p-calendar {
+        flex: 1 1 auto;
+        .ui-inputtext {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: 0 none;
+          border-top-right-radius: 2px;
+          border-bottom-right-radius: 2px;
+          border-right: 1px solid #cccccc;
+        }
+      }
+    }
+    .academic{
+      margin-top: 30px!important;
+    }
+    .ui-messages.ui-messages-info {
+      color:#4c1414;
+    }
+  }
+}
+
+:host {
+  ::ng-deep {
+    .ui-inputgroup{
+      p-dropdown {
+        flex: 1 1 auto;
+        .ui-dropdown {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: 0 none;
+        }
+      }
+    }
+  }
+}
+.iconclass{
+    background-image: url(icon_expand.png);
+    background-position: right 10px top 7px;
+    background-repeat: no-repeat;
+  }
+
+  .errorcls{
+    border:1px solid red;
+  }
+
+  // :host {
+  //   ::ng-deep {
+  //     p-inputmask.form-control.ng-untouched.ng-pristine.ng-valid{
+  //       width:586px !important;
+  //     }
+  //   }
+  // }
+
+  :host{
+    ::ng-deep {
+      .inputSize{
+        width:550px !important;
+      }
+    }
+  }

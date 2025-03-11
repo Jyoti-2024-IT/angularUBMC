@@ -1,0 +1,14 @@
+<div class="ui-fluid">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <div class="card">
+          <h3 style="text-align:center">Forwarding you to Payment Gateway. Please wait..</h3>
+          <form #form ngNoForm method="POST" name="payuform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment" target="">
+            <input type="hidden" name="msg" value="{{msgbilldesk}}">
+            <!-- <input type="submit" (click)="pay()"> -->
+            <!-- <button type="submit" label="Submit for Payment" class="blue-btn btn-lg" (click)="pay()" pButton></button> -->
+          </form>
+      </div>
+    </div>
+  </div>
+</div>

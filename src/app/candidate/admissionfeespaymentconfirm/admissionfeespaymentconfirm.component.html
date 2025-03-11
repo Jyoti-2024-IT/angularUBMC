@@ -1,0 +1,16 @@
+<div class="ui-fluid">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <div class="card">
+          <h2>{{showtext}}</h2>
+          <a *ngIf="showchallanlink" href="{{admitsLink}}" target="_blank">Click here to Print your Admission Fees Paid Challan
+            </a>
+      </div>
+    </div>
+    <div class="ui-g-12">
+				<div class="card no-margin no-padding">
+					<button type="button" label="Go to Dashboard" class="indigo-btn btn-lg" (click)="gotoDashBoard()" pButton></button>
+				</div>
+			</div>
+  </div>
+</div>

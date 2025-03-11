@@ -1,0 +1,40 @@
+<div class="ui-fluid">
+	<div class="ui-g">
+		<div class="ui-g-12">
+			<div class="card">
+				<h3>Online Payment</h3>
+				<div class="ui-g form-group">
+					<div class="ui-g-12 ui-md-3">
+						<label>Select Challan * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">1.</span>
+							<select class="form-control iconclass" [(ngModel)]="challanNo" (change)="getamntcourse(challanNo)" style="width:100%!important;background-color:white" required>
+								<option [ngValue]="undefined" selected>Select Challan</option>
+								<option *ngFor="let o of challanList" [value]="o.name">{{o.name}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-6">
+						<label>Course * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">2.</span>
+							<input style="width: 50%;" type="text" pInputText placeholder="Course" [readonly]="true" [(ngModel)]="coursename">
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-3">
+						<label>Amount * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">3.</span>
+							<input style="width: 50%;" type="text" pInputText placeholder="Amount" [readonly]="true" [(ngModel)]="amountPay">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui-g-12">
+			<div class="card no-margin no-padding">
+				<button type="submit" label="Make Payment" (click)="payment(challanNo)" class="blue-btn btn-lg" pButton></button>
+			</div>
+		</div>
+	</div>
+</div>

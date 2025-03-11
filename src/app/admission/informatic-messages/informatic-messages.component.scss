@@ -1,0 +1,27 @@
+:host {
+  ::ng-deep {
+    .hrcl-informatic-message {
+      position: fixed;
+      top: 50px;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      .ui-messages {
+        margin: 0;
+      }
+    }
+  }
+}
+@media (max-width: 1024px) {
+  :host {
+    ::ng-deep {
+      .hrcl-informatic-message {
+        position: relative;
+        top: 0px;
+        left: 0;
+        right: 0;
+        z-index: 99;
+      }
+    }
+  }
+}

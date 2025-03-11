@@ -1,0 +1,192 @@
+/* Declaration */
+
+.declaration-body {
+  min-height: 100%;
+  font-size: 16px;
+  margin: 0;
+  background-image: url("/assets/layout/images/map.png");
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: 60% 100%;
+  .body-container {
+    height: 7px;
+    border-top: 7px solid #39a3f4;
+    .left-side {
+      height: 100%;
+      padding-left: 100px;
+      width: 40%;
+      h1 {
+        font-size: 60px;
+        color: #424242;
+      }
+      h2 {
+        font-size: 30px;
+      }
+      p {
+        font-size: 24px;
+        color: #424242;
+        padding-right: 50px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+      img {
+        padding: 100px 0 100px 0;
+        width: 196px;
+      }
+    }
+    .right-side {
+      width: 60%;
+      .declaration-wrapper {
+        width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        .declaration-container {
+          box-sizing: border-box;
+          padding-top: 100px;
+          text-align: center;
+          color: #4f575b;
+          .ui-panel {
+            text-align: left;
+            .ui-panel-content {
+              height: 300px;
+              overflow: auto;
+            }
+          }
+          .title {
+            font-size: 20px;
+            color: #424242;
+            display: block;
+            text-align: left;
+            margin-bottom: 10px;
+            margin-left: 12px;
+          }
+          .password-container {
+            text-align: right;
+          }
+          a {
+            color: #39a3f4;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 32px;
+            display: inline-block;
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            -moz-transition: border-bottom-color 0.3s;
+            -o-transition: border-bottom-color 0.3s;
+            -webkit-transition: border-bottom-color 0.3s;
+            transition: border-bottom-color 0.3s;
+            &:hover {
+              border-bottom-color: #39a3f4;
+            }
+          }
+          input {
+            width: 100%;
+            font-size: 1em;
+          }
+          .ui-button {
+            width: 100%;
+            font-size: 16px;
+          }
+        }
+      }
+      .copyright {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+      }
+    }
+  }
+}
+
+@media (max-width: 64em) {
+  .declaration-body {
+    text-align: center;
+    background-size: cover;
+    .body-container {
+      .left-side {
+        height: 300px;
+        padding-left: 0.5em;
+        width: 100%;
+        img {
+          padding: 20px 0 20px 0;
+        }
+        h1 {
+          font-size: 40px;
+        }
+        h2 {
+          font-size: 25px;
+        }
+        p {
+          padding-right: 0;
+          font-size: 20px;
+        }
+      }
+      .right-side {
+        height: 100%;
+        width: 100%;
+        .declaration-wrapper {
+          width: 320px;
+          .declaration-container {
+            padding-top: 0;
+            .ui-panel {
+              .ui-panel-content {
+                height: 250px;
+              }
+            }
+          }
+        }
+        .copyright {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          left: 10px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 40em) {
+  .declaration-body {
+    .body-container {
+      .left-side {
+        height: 200px;
+        padding-left: 0;
+        text-align: center;
+        width: 100%;
+        h1 {
+          font-size: 25px;
+        }
+        h2 {
+          font-size: 20px;
+        }
+        p {
+          padding-right: 0;
+          font-size: 16px;
+          margin-top: 5px;
+          margin-bottom: 15px;
+        }
+        img {
+          padding: 20px 0 10px 0;
+          width: 150px;
+        }
+      }
+      .right-side {
+        height: calc(100% - 250px);
+        width: 100%;
+        .declaration-wrapper {
+          width: 300px;
+          .declaration-container {
+            padding-top: 0;
+            .ui-panel {
+              .ui-panel-content {
+                height: 225px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

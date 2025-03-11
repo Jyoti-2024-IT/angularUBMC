@@ -1,0 +1,336 @@
+<div class="ui-g dashboard">
+	<div class="ui-g-12 ui-lg-2">
+		<div class="overview-box overview-box-2" routerLink="/admission/general-information"
+			style="cursor: pointer;border-radius: 28px;">
+			<h1>View</h1>
+			<div class="overview-value">General Info</div>
+			<div class="overview-ratio">
+				<div class="overview-direction">
+					<a>
+						<i class="fa fa-arrow-right"></i>
+					</a>
+				</div>
+			</div>
+			<img src="assets/layout/images/dashboard/graph-green.svg" alt="apollo-layout" />
+		</div>
+	</div>
+	<div class="ui-g-12 ui-lg-2">
+		<div class="overview-box overview-box-1" routerLink="/admission/academic-information"
+			style="cursor: pointer;border-radius: 28px;">
+			<h1>EDIT</h1>
+			<div class="overview-value">Academic Info</div>
+			<div class="overview-ratio">
+				<div class="overview-direction">
+					<a>
+						<i class="fa fa-arrow-right"></i>
+					</a>
+				</div>
+			</div>
+			<img src="assets/layout/images/dashboard/graph-blue.svg" alt="apollo-layout" />
+		</div>
+	</div>
+	<div class="ui-g-12 ui-lg-2">
+		<div class="overview-box overview-box-3" routerLink="/admission/course-information"
+			style="cursor: pointer;border-radius: 28px;">
+			<h1>ADD</h1>
+			<div class="overview-value">Course / Session</div>
+			<div class="overview-ratio">
+				<div class="overview-direction">
+					<a>
+						<i class="fa fa-arrow-right"></i>
+					</a>
+				</div>
+			</div>
+			<img src="assets/layout/images/dashboard/graph-yellow.svg" alt="apollo-layout" />
+		</div>
+	</div>
+	<div class="ui-g-12 ui-lg-2">
+		<div class="overview-box overview-box-6" routerLink="/admission/additional-information"
+			style="cursor: pointer;border-radius: 28px;">
+			<h1>EDIT</h1>
+			<div class="overview-value">Additional Info</div>
+			<div class="overview-ratio">
+				<div class="overview-direction">
+					<a>
+						<i class="fa fa-arrow-right"></i>
+					</a>
+				</div>
+			</div>
+			<img src="assets/layout/images/dashboard/graph-yellow1.svg" alt="apollo-layout" />
+		</div>
+	</div>
+
+	<div class="ui-g-12 ui-lg-2">
+		<div class="overview-box overview-box-4" (click)="getChallanOrForm('form')"
+			style="cursor: pointer;border-radius: 28px;">
+			<h1>PRINT</h1>
+			<div class="overview-value">Form Download</div>
+			<div class="overview-ratio">
+				<div class="overview-direction">
+					<a><i class="fa fa-arrow-right"></i></a>
+				</div>
+			</div>
+			<img src="assets/layout/images/dashboard/graph-red.svg" alt="apollo-layout" />
+		</div>
+	</div>
+	
+	<div class="ui-g-12 ui-lg-2">
+		<div class="overview-box overview-box-5" (click)="showChangePassDialog()"
+			style="cursor: pointer;border-radius: 28px;">
+			<h1>CHANGE</h1>
+			<div class="overview-value">Change Password</div>
+			<div class="overview-ratio">
+				<div class="overview-direction">
+					<a><i class="fa fa-arrow-right"></i></a>
+				</div>
+			</div>
+			<img src="assets/layout/images/dashboard/graph-purple.svg" alt="apollo-layout" />
+		</div>
+	</div>
+	<!----------------------------------admission Status ---------------------------------------------------->
+	<div class="ui-g-12" *ngIf="showAdmStatus">
+		<div class="card no-padding">
+			<p-table [columns]="colsAdm" [value]="admStatusList">
+				<ng-template pTemplate="caption">
+					Admission Status
+				</ng-template>
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th *ngFor="let col of columns">
+							{{col.header}}
+						</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-rowData let-columns="columns">
+					<tr>
+						<td>{{rowData.coursenm}}</td>
+						<td style="text-align:center">{{rowData.appno}}</td>
+						<!-- close date 26.5.23 -->
+						<!-- <td>
+									<button pButton type="button" *ngIf="rowData.feespaydt != '-'" class="ui-button-raised ui-g-12" style="background-color:#6ebc3b"
+									label="Print Challan" (click)="getAdmChallan(rowData.id)">
+									</button>
+
+									<button pButton type="button" [disabled]="rowData.subpay=='0' || rowData.feespaydt != '-'" *ngIf="rowData.feespaydt === '-'" class="ui-button-raised ui-g-12"
+									label="Pay" (click)="payAdmissionFees(rowData.id)">
+									</button>
+								</td> -->
+						<!-- <td style="text-align:center">{{rowData.feespaydt}}</td> -->
+						<!-- close date 26.5.23 -->
+						<td>
+							<button pButton type="button" *ngIf="rowData.feespaydt != '-'"
+								class="ui-button-raised ui-g-12" label="Print Admission Form"
+								(click)="printAdmissionForm(rowData.id)">
+							</button>
+							<p *ngIf="rowData.feespaydt === '-'">Not Available</p>
+						</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+</div>
+<!----------------------------------application Status ---------------------------------------------------->
+<div class="ui-g-12">
+	<p-messages [closable]="false" [(value)]="msgs"></p-messages>
+</div>
+
+<div class="ui-g-12">
+	<div class="card no-padding">
+		<p-table [columns]="cols" [value]="appStatusList" [responsive]="true">
+			<ng-template pTemplate="caption">
+				Application Status
+			</ng-template>
+			<ng-template pTemplate="header" let-columns>
+				<tr>
+					<th *ngFor="let col of columns">
+						{{col.header}}
+					</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+				<tr>
+					<td style="text-align:center"><span class="ui-column-title">Course Name</span>{{rowData.coursenm}}
+					</td>
+					<td style="text-align:center"><span class="ui-column-title">Application
+							Number</span>{{rowData.appno}}</td>
+					<!-- close date 26.5.23 -->
+					<!-- <td style="text-align:center" *ngIf="rowGroupMetadata[rowData.challan].index === rowIndex && rowData.paymentdt !='-' " [attr.rowspan]="rowGroupMetadata[rowData.challan].size"><span class="ui-column-title">Payment Date</span>Paid on {{rowData.paymentdt}}</td>
+							<td style="text-align:center" *ngIf="rowGroupMetadata[rowData.challan].index === rowIndex && rowData.paymentdt =='-' " [attr.rowspan]="rowGroupMetadata[rowData.challan].size"><span class="ui-column-title">Payment Date</span>{{rowData.paymentdt}}</td> -->
+					<!-- <td *ngIf="rowGroupMetadata[rowData.challan].index === rowIndex" [attr.rowspan]="rowGroupMetadata[rowData.challan].size">
+								<button pButton type="button" *ngIf="rowData.paystatus === 'Complete'" class="ui-button-raised ui-g-12" style="background-color:#6ebc3b"
+								 label="Print Challan" (click)="getChallanOrForm(rowData.challan)">
+								</button>
+                <button pButton type="button" *ngIf="rowData.paystatus === 'Pending'" [disabled]="rowData.meritlist === 'Yes'" class="ui-button-raised ui-g-12" label="Pay" (click)="payApplicationFees(rowData.challan)">
+								</button>
+							</td> -->
+					<!-- close date 26.5.23 -->
+
+					<td style="text-align:center">
+						<span class="ui-column-title">MINOR ELECTIVE SELECTION</span>
+						<button pButton type="button"
+							*ngIf="rowData.courseId!=65 && rowData.courseId != 49 && rowData.courseId != 59"
+							class="ui-button-raised ui-g-12" label="Minor Elective Subject Selection"
+							(click)="selectSubject(rowData.id,rowData.courseId,rowData.subselectionstatus,rowData.documentstatus)">
+						</button>
+						<p *ngIf="rowData.courseId == 65 || rowData.courseId == 49">Not Required</p>
+					</td>
+					<!-- <td style="text-align:center">
+						<button pButton type="button" *ngIf="rowData.confirmation === 'yes'"
+							[style.background-color]="rowData.confirmed === 'yes' ? '#6ebc3b' : '#4a5ab9'"
+							class="ui-button-raised ui-g-12"
+							label="{{rowData.confirmed === 'yes' ? 'Confirmed (EDIT)' : 'Confirmation Of Interest' }}"
+							(click)="cnfofInterest(rowData.id)">
+						</button>
+						<span *ngIf="rowData.confirmation === 'no' && rowData.confirmed === 'yes' "
+							style="color:#6ebc3b"><b>Done</b><i class="fa fa-check" aria-hidden="true"></i></span>
+					</td> -->
+					<td style="text-align:center">
+						<span class="ui-column-title">Merit List Status</span>
+						<p *ngIf="rowData.meritlist === 'No'">Not Available</p>
+						<p *ngIf="rowData.meritlist === 'Yes'" style="color:#6ebc3b"><b>Yes</b><i class="fa fa-check"
+								aria-hidden="true"></i></p>
+					</td>
+					<!--Start Add by a -->
+					<td style="text-align:center"
+						pTooltip="Note: The Rank column in the dashboard represents the position of the student (in order of merit) who have expressed their interest.">
+						<span class="ui-column-title">Rank</span>
+						<p style="font-weight: bold;">{{ rowData.provrank }}</p>
+					</td>
+					<!--End Add by a -->
+				</tr>
+			</ng-template>
+		</p-table>
+	</div>
+</div>
+
+<p-dialog header="Confirm" [closeOnEscape]="false" [closable]="false" [draggable]="false"
+	[(visible)]="displayConfirmDialog" modal="modal" showEffect="fade">
+	<div class="ui-g-12">
+		<p>Do you confirm your interest to take admission by paying fees if your name appears in Merit list?</p>
+	</div>
+	<p-footer>
+		<button type="button" pButton icon="fa-close" (click)="reject()" label="No"></button>
+		<button type="button" pButton icon="fa-check" (click)="accept()" label="Yes"></button>
+	</p-footer>
+</p-dialog>
+
+<!-- -----------------------------------------change password modal------------------------------------------------- -->
+
+<p-dialog header="Change Password" [(visible)]="displayChangePass" [modal]="true" [responsive]="true" [width]="350"
+	[minWidth]="200" [minY]="70" [baseZIndex]="10000" [draggable]="false" [resizable]="false"
+	[contentStyle]="{'overflow':'visible'}">
+	<form [formGroup]="changepassForm" *ngIf="changepassForm">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<label for="dtls" class="required">Old Password</label>
+				<div class="ui-inputgroup">
+					<span class="ui-inputgroup-addon">1</span>
+					<input type="hidden" class="form-control" formControlName="id">
+					<input type="text" [type]="oldshow ? 'text' : 'password'" class="form-control"
+						[ngClass]="{ 'ui-state-error': changepassForm.controls.dtls.invalid && changepassForm.controls.dtls.dirty, 'has-success': changepassForm.controls.dtls.valid && changepassForm.controls.dtls.dirty }"
+						formControlName="dtls" placeholder="Old Password" maxlength="10" placeholder="Old Password"
+						pInputText>
+					<button pButton type="button" (click)="oldPassword()" icon="fa fa-eye"
+						class="ui-button-warn"></button>
+				</div>
+				<div *ngIf="changepassForm.controls.dtls.invalid && changepassForm.controls.dtls.dirty">
+					<p style="color:red">This field is required.</p>
+				</div>
+			</div>
+			<div class="ui-g-12">
+				<label for="password" class="required">New Password</label>
+				<div class="ui-inputgroup">
+					<span class="ui-inputgroup-addon">2</span>
+					<input type="text" [type]="show ? 'text' : 'password'" class="form-control"
+						[ngClass]="{ 'ui-state-error': changepassForm.controls.password.invalid && changepassForm.controls.password.dirty, 'has-success': changepassForm.controls.password.valid && changepassForm.controls.password.dirty }"
+						formControlName="password" placeholder="Password (Max 10 Charecters)" maxlength="10"
+						placeholder="New Password" pInputText>
+					<button pButton type="button" (click)="password()" icon="fa fa-eye" class="ui-button-warn"></button>
+				</div>
+				<div *ngIf="changepassForm.controls.password.invalid && changepassForm.controls.password.dirty">
+					<p style="color:red">This field is required.</p>
+				</div>
+			</div>
+			<div class="ui-g-12">
+				<label for="chkpass" class="required">Confirm Password</label>
+				<div class="ui-inputgroup">
+					<span class="ui-inputgroup-addon">3</span>
+					<input [type]="cnfshow ? 'text' : 'password'" class="form-control"
+						[ngClass]="{ 'ui-state-error': changepassForm.controls.chkpass.invalid && changepassForm.controls.chkpass.dirty, 'has-success': changepassForm.controls.chkpass.valid && changepassForm.controls.chkpass.dirty }"
+						formControlName="chkpass" placeholder="Confirm Password (Max 10 Charecters)" maxlength="10"
+						pPassword>
+					<button pButton type="button" (click)="cnfpassword()" icon="fa fa-eye"
+						class="ui-button-warn"></button>
+				</div>
+				<div *ngIf="changepassForm.controls.chkpass.invalid && changepassForm.controls.chkpass.dirty">
+					<p style="color:red">Confirm password does not match.</p>
+				</div>
+			</div>
+			<div class="ui-g-12">
+				<button pButton type="button" label="Change Password" class="ui-button-raised ui-g-12"
+					(click)="changePass()"></button>
+			</div>
+		</div>
+	</form>
+</p-dialog>
+
+<!-- -----------------------------------------subject selection modal------------------------------------------------- -->
+
+<p-dialog header="Minor Elective Subject Selection" [(visible)]="subjectSelectionDisplay" [modal]="true"
+  [responsive]="true" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <form [formGroup]="subjectSelectionForm" *ngIf="subjectSelectionForm">
+    <div class="card no-padding no-margin">
+      <p-messages [(value)]="msgSubjectSelection" [closable]="false" styleClass="general-message"></p-messages>
+    </div>
+    <p-messages [(value)]="errorMsgs"></p-messages>
+    <div class="card">
+      <div class="ui-g form-group">
+        <div class="ui-table ui-widget ui-table-responsive">
+          <div class="ui-table-wrapper">
+            <table formArrayName="subjectDetailInfo" style="width:100%">
+              <thead class="ui-table-thead">
+                <tr>
+                  <th style="width: 50px; text-align: left;">Srl</th>
+                  <th>Subject Type</th>
+                  <th>Subject</th>
+                </tr>
+              </thead>
+              <tbody class="ui-table-tbody">
+                <tr *ngFor="let item of subjectSelectionForm.controls.subjectDetailInfo.controls; let i=index"
+                  [formGroupName]="i">
+                  <td>
+                    <span class="ui-column-title">Srl</span>{{i+1}}
+                  </td>
+                  <td>
+                    <span class="ui-column-title">Subject Type</span>
+                    <input type="hidden" class="form-control" formControlName="subjectTypeId"
+                      style="width:100%!important" pInputText>
+                    <input type="text" class="form-control" formControlName="sujectType" readonly="true"
+                      style="width:100%!important" pInputText>
+                  </td>
+                  <td>
+                    <span class="ui-column-title">Subject</span>
+                    <select class="form-control custom-select" formControlName="subjectId"
+                      (change)="checkRepeat(i, $event)" style="width:100%!important;background-color:white">
+                      <option [value]="0">Select Subject</option>
+                      <option *ngFor="let o of allsubjects[i].a" [value]="o.id">{{o.name}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="ui-g-12" *ngIf="!disbaleselectsubjectbtn"> -->
+    <div class="ui-g-12">
+      <button pButton type="submit" [disabled]="genSubSelectBttnDisable" label="Submit" class="ui-button-raised ui-g-12"
+        (click)="savesubjectSelection()"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

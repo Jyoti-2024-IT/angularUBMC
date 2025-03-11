@@ -1,0 +1,110 @@
+<div class="ui-fluid">
+	<div class="ui-g">
+		<div class="ui-g-12 no-padding-top-bottom">
+			<app-informatic-messages [informaticMessages]="msgs"></app-informatic-messages>
+		</div>
+		<div class="ui-g-12">
+			<app-admission-steps [activeIndex]="activeIndex"></app-admission-steps>
+		</div>
+		<div class="ui-g-12">
+			<div class="card">
+				<h1>Step 3 of 5 - Course Selection (Sr. No. 17)</h1>
+				<h3>17. Course Selection</h3>
+				<p-dataTable [(selection)]="selectedCourse" let i="rowIndex" [value]="tableData">
+					<p-column [header]="'Sl No'" [style]="{'width':'15%','text-align':'center'}">
+						<ng-template let-i="rowIndex" pTemplate="body">
+							{{i+1}}
+						</ng-template>
+					</p-column>
+					<p-column field="coursenm" [header]="'Course'" [style]="{'width':'32%'}"></p-column>
+					<p-column field="coursepreference" [header]="'Course Selection Preference'" [style]="{'width':'20%'}">
+						<ng-template pTemplate="body" let-rowData let-i="rowIndex">
+						  <p-dropdown 
+							[options]="courseOptions" 
+							[(ngModel)]="tableData[i].coursepreference" 
+							optionLabel="name" 
+							[disabled]="!tableData[i].hasOwnProperty('preferenceDisabled') || tableData[i].preferenceDisabled" 
+							placeholder="Select Your Preference"
+							(ngModelChange)="onPreferenceChange(tableData[i])">
+						  </p-dropdown>
+						</ng-template>
+					  </p-column>			  
+					  
+					<p-column field="selchxbx" [header]="'Select'" [style]="{'width':'26%','text-align':'center'}">
+						<ng-template let-col let-select="rowData" pTemplate="body" let-rowData let-i="rowIndex">
+              				<p-checkbox [(ngModel)]="select.svdchxbx" binary="true" *ngIf="select.svdchxbx" [disabled]="true" styleClass="applied-course"></p-checkbox>
+							<p-checkbox [(ngModel)]="select.selchxbx" binary="true" *ngIf="!select.svdchxbx" (click)="calculateAmount(select.selchxbx, select)"></p-checkbox>
+						</ng-template>
+					</p-column>
+				</p-dataTable>
+			</div>
+		</div>
+		<!-- [disabled]="selCheckboxIds.length === 3" -->
+		<!-- <div class="ui-g-12 ui-md-8">
+			<span style="font-size: 22px;">
+				<b>Total Application Fees to be paid :</b>
+			</span>
+		</div> -->
+
+		<!-- <div class="ui-g-12 ui-md-4">
+			<div class="ui-inputgroup">
+				<span class="ui-inputgroup-addon">₹</span>
+				<input type="text" value="{{totalAmount}}" style="color:green;text-align:right;font-size:22px;" [readonly]="true" pInputText
+				 placeholder="Price">
+				<span class="ui-inputgroup-addon" style="font-size:22px;">.00</span>
+			</div>
+		</div> -->
+		<div class="ui-g-12">
+			<div class="card no-margin no-padding" >
+				<button type="submit" label="Submit" class="indigo-btn btn-lg" (click)="saveCourseSelection()" pButton></button>
+			</div>
+
+		</div>
+		<div class="ui-g-12" *ngIf="showclose">
+			<div class="card no-margin no-padding">
+				<!-- {{this.academicForm.value|json}} -->
+				<button type="button" label="Go to Dashboard" class="indigo-btn btn-lg" (click)="goToDashboard()" pButton></button>
+			</div>
+		</div>
+	</div>
+</div>
+<p-messages [value]="msgsResponse" sticky="sticky"></p-messages>
+
+<!-- <p-confirmDialog></p-confirmDialog> -->
+
+<p-confirmDialog header="Confirmation" message="{{nonEligiblemsg}}" [(visible)]="displayCourseNonEligible" icon="fa fa-question-circle" #cd>
+    <p-footer>
+		<button type="button" pButton icon="fa-check" label="Edit Marks" (click)="acceptcourse()"></button>
+        <button type="button" pButton icon="fa-close" label="Cancel" (click)="rejectcourse()"></button>
+    </p-footer>
+</p-confirmDialog>
+
+<p-dialog header="Course Selection Confirmation" [closeOnEscape]="false" [closable]="false" [draggable] ="false" [(visible)]="displayConfirmDialog" modal="modal" showEffect="fade">
+	<div class="ui-g-12">
+		<p-table [columns]="cols" [value]="selectedDataToShow">
+			<ng-template pTemplate="header" let-columns>
+				<tr>
+					<th *ngFor="let col of columns">{{col.header}}</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+				<tr>
+					<td style="text-align:center">{{rowIndex+1}}</td>
+					<td>{{rowData.coursenm}}</td>
+					<td style="text-align:center" *ngIf="rowGroupMetadata[rowData.selchxbx].index === rowIndex " [attr.rowspan]="rowGroupMetadata[rowData.selchxbx].size">{{totalAmount}}</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</div>
+	<div class="ui-g-12">
+		<h2>I understand -</h2>
+		<p>i.  That the course / session mentioned above are selected by me and cannot be changed / reversed after submission.</p>
+		<!-- <p>ii. The application will be valid only after payment of the Application Fees.</p>
+		<p>iii. The payment of Application fees will only make me eligible for the Merit List / Online Test for the selected course / session.</p>
+		<p>iv. The payment of Application Fees does not guarantee admission to the selected course / session.</p> -->
+	</div>
+	<p-footer>
+		<button type="button" pButton icon="fa-close" (click)="reject()" label="Edit selected course/session"></button>
+		<button type="button" pButton icon="fa-check" (click)="accept()" label="Continue with selection"></button>
+	</p-footer>
+</p-dialog>

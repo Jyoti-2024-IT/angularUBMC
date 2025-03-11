@@ -1,0 +1,43 @@
+<div class="ui-fluid">
+	<div class="ui-g">
+		
+		<div class="ui-g-12">
+			<div class="card">
+				<h3>Admission Fees Payment</h3>
+				<div class="ui-g form-group">
+					<div class="ui-g-12 ui-md-8">
+						<label>Payment Type * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">a.</span>
+							<select id="pamentType" class="form-control iconclass"  pInputText>
+								<option value="Online Payment">Online Payment</option>
+							</select>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4">
+						<label>Amount * :</label>
+						<div class="ui-inputgroup">
+							<span class="ui-inputgroup-addon">b.</span>
+							<input style="width: 50%;;color: green;" type="text" pInputText placeholder="Price" [readonly]="true" [(ngModel)]="amount">
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="ui-g-12">
+			<div class="card no-margin no-padding">
+				<button type="submit" label="Submit" (click)="payment()" class="btn-lg" pButton></button>
+			</div>
+		</div>
+
+		<div class="ui-g-12">
+			<div class="card no-margin no-padding">
+				<button type="button" label="Go to Dashboard" class="btn-lg" (click)="goToDashboard()" pButton></button>
+			</div>
+		</div>
+	</div>
+	<p-dialog [(visible)]="display" *ngIf="display" header="Print Challan" [modal]="true" [responsive]="true"
+	 [draggable]="false">
+	 <a href="{{admitsLink}}" target="_blank">Click here to Generate your Admission Fees Challan</a>
+	 </p-dialog>

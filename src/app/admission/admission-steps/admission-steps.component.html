@@ -1,0 +1,21 @@
+<!-- <div class="card no-margin hrcl-informatic-steps" *ngIf="currentStep < 5"> -->
+<div class="card no-margin hrcl-informatic-steps" *ngIf="currentStep < 5">
+  <div class="ui-steps ui-widget ui-helper-clearfix">
+    <ul role="tablist">
+      <li class="ui-steps-item" *ngFor="let step of stepsItems" [ngClass]="{
+        'ui-state-active':(step.stepNumber <= currentStep && step.stepNumber != activeIndex),
+        'ui-state-highlight':(step.stepNumber == activeIndex),
+        'ui-state-default':(step.stepNumber > currentStep)
+      }">
+        <a class="ui-menuitem-link ng-star-inserted" *ngIf="step.stepNumber <= currentStep" routerLink="{{step.routerLink}}">
+          <span class="ui-steps-number">{{step.stepNumber + 1}}</span>
+          <span class="ui-steps-title">{{step.label}}</span>
+        </a>
+        <a class="ui-menuitem-link ng-star-inserted" *ngIf="step.stepNumber > currentStep">
+          <span class="ui-steps-number">{{step.stepNumber + 1}}</span>
+          <span class="ui-steps-title">{{step.label}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

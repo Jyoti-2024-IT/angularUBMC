@@ -1,0 +1,73 @@
+<p-dialog [(visible)]="display" *ngIf="display" header="Application Form Submission Successful" [modal]="true" [responsive]="true"
+   [draggable]="false" [closeOnEscape]="false" [closable]="false">
+   <p style="text-align:center;font-size: 22px;color: red;">{{showtext}}</p>
+		<p style="text-align:center;font-size: 22px;color: red;">CLICK ON THE CHALLAN NUMBER BELOW TO PRINT YOUR CHALLAN(S)</p>
+		<p-dataTable let i="rowIndex" [value]="tableData" selectionMode="multiple">
+			<p-column field="slot2" [header]="'COURSE'"></p-column>
+			<p-column field="slot3" [header]="'APPLICATION NO.'"></p-column>
+			<p-column field="slot5" [header]="'CHALLAN'">
+				<ng-template let-row="rowData" pTemplate type="body">
+					<a href="{{row.slot5}}" target="_blank">{{row.slot4}}</a>
+				</ng-template>
+			</p-column>
+		</p-dataTable>
+		<a href="{{admitsLink}}" target="_blank">
+			<p style="text-align:center;font-size: 22px;">
+				<u>CLICK HERE TO PRINT APPLICATION FORM</u>
+			</p>
+		</a>
+		<p></p>
+
+		<div class="ui-g-12">
+			<div class="card">
+				<p>NOTE : APPLICATION FORM IS COMMON FOR ALL COURSE(S) APPLIED.</p>
+				<a href="#">
+					<p style="text-align:center;font-size: 22px;color:blue;">CLICK HERE TO LOGIN TO YOUR PORTAL</p>
+				</a>
+			</div>
+		</div>
+		<p-footer>
+			<!-- <button type="button" pButton (click)="gotoDashBoard()" label="Go to Dashboard"></button> -->
+		</p-footer>
+	</p-dialog>
+	<p-dialog [(visible)]="processbar" *ngIf="processbar" header="Please wait ................." [modal]="true" [responsive]="true"
+	 [closable]="false" [draggable]="false" [width]="900">
+  </p-dialog>
+  
+
+  <p-dialog [(visible)]="displayunsuccessfull" *ngIf="displayunsuccessfull" header="Application Form Submission Unsuccessful" [modal]="true" [responsive]="true"
+   [draggable]="false" [closeOnEscape]="false" [closable]="false">
+   <p style="text-align:center;font-size: 22px;color: red;">{{showtext}}</p>
+		<!-- <p style="text-align:center;font-size: 22px;color: red;">CLICK ON THE CHALLAN NUMBER BELOW TO PRINT YOUR CHALLAN(S)</p>
+		<p-dataTable let i="rowIndex" [value]="tableData" selectionMode="multiple">
+			<p-column field="slot2" [header]="'COURSE'"></p-column>
+			<p-column field="slot3" [header]="'APPLICATION NO.'"></p-column>
+			<p-column field="slot5" [header]="'CHALLAN'">
+				<ng-template let-row="rowData" pTemplate type="body">
+					<a href="{{row.slot5}}" target="_blank">{{row.slot4}}</a>
+				</ng-template>
+			</p-column>
+		</p-dataTable>
+		<a href="{{admitsLink}}" target="_blank">
+			<p style="text-align:center;font-size: 22px;">
+				<u>CLICK HERE TO PRINT APPLICATION FORM</u>
+			</p>
+		</a>
+		<p></p> -->
+
+		<div class="ui-g-12">
+			<div class="card">
+				<!-- <p>NOTE : APPLICATION FORM IS COMMON FOR ALL COURSE(S) APPLIED.</p>
+				<p>PLEASE NOTE THE STUDENT COPY OF BANK CHALLAN IS NOT REQUIRED TO BE SUBMITTED MANUALLY AT THE COLLEGE.</p> -->
+				<a href="#">
+					<p style="text-align:center;font-size: 22px;color:blue;">CLICK HERE TO LOGIN TO YOUR PORTAL</p>
+				</a>
+			</div>
+		</div>
+		<p-footer>
+			<!-- <button type="button" pButton (click)="gotoDashBoard()" label="Go to Dashboard"></button> -->
+		</p-footer>
+	</p-dialog>
+	<p-dialog [(visible)]="processbar" *ngIf="processbar" header="Please wait ................." [modal]="true" [responsive]="true"
+	 [closable]="false" [draggable]="false" [width]="900">
+	</p-dialog>

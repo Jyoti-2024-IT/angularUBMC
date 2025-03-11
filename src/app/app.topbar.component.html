@@ -1,0 +1,55 @@
+<div class="topbar clearfix">
+  <!-- <a class="home" *ngIf="showHome">
+    <a class="fa fa-home" style="cursor: pointer;" (click)="goToHome()">Home</a>
+  </a>
+
+  <img class="logo" alt="admission" src="assets/layout/images/logo1.png" (click)="goToHome()" style="cursor: pointer;" />
+
+  <a class="profile">
+    <span class="username">Hi, {{userDetails.firstName}}</span>
+    <a class="fa fa-sign-out" style="cursor: pointer;" (click)="logout()">Log Out</a>
+  </a> -->
+  <img
+    class="logo"
+    alt="admission"
+    src="assets/layout/images/Logo UBMC (1).png" 
+    style="width: 72px; height: 40px; margin-left: 1px;"  
+    (click)="goToHome()"
+    style="cursor: pointer;"
+  />
+  <!-- 170 -->
+
+  <!-- <h2 class="college">The Bhawanipur Education Society College</h2> -->
+
+  <!-- <a class="profile">
+    <span class="username">Hi, {{ userDetails.firstName }}</span>
+    <a class="fa fa-home" style="cursor: pointer;" (click)="goToHome()">Home</a>
+    |
+    <a class="fa fa-sign-out" style="cursor: pointer;" (click)="logout()"
+      >Log Out</a
+    >
+  </a> -->
+
+  <a href="#" class="profile" (click)="app.onTopbarMenuButtonClick($event)">
+    <span class="username">Hi, {{ userDetails.firstName }}</span>
+    <i class="fa fa-angle-down"></i>
+  </a>
+
+  <ul
+    class="topbar-menu fadeInDown"
+    [ngClass]="{ 'topbar-menu-visible': app.topbarMenuActive }"
+  >
+    <li role="menuitem">
+      <a (click)="goToHome()" style="cursor: pointer;">
+        <i class="fa fa-fw fa-home"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    <li role="menuitem">
+      <a (click)="logout()" style="cursor: pointer;">
+        <i class="fa fa-fw fa-sign-out"></i>
+        <span>Log Out</span>
+      </a>
+    </li>
+  </ul>
+</div>

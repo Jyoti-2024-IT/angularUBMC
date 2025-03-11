@@ -1,0 +1,820 @@
+<form [formGroup]="additionalForm" (ngSubmit)="saveAdditionalDetails()" class="additional-information" novalidate>
+  <div class="ui-fluid">
+    <div class="ui-g">
+      <div class="ui-g-12 no-padding-top-bottom">
+        <app-informatic-messages [informaticMessages]="msgs"></app-informatic-messages>
+      </div>
+      <div class="ui-g-12">
+        <app-admission-steps [activeIndex]="activeIndex"></app-admission-steps>
+      </div>
+      <div class="ui-g-12">
+        <div class="card">
+          <h1>Step 4 of 5 - Additional Information (Sr. No. 18 to 59)</h1>
+          <div class="ui-g form-group">
+            <!--Start-->
+            <div class="ui-g-12 ui-md-4">
+              <label for="emergencyContactNo" class="required">Alternate Mobile Number</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">18</span>
+                <input type="text" appInputRestriction="integer" class="form-control"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.emergencyContactNo.invalid && additionalForm.controls.emergencyContactNo.dirty, 'has-success': additionalForm.controls.emergencyContactNo.valid && additionalForm.controls.emergencyContactNo.dirty }"
+                  formControlName="emergencyContactNo" (blur)="checkContactNo()" maxlength="10"
+                  placeholder="Alternate Mobile Number 10 Digits only - (eg. 9123456789)." pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.emergencyContactNo.invalid && additionalForm.controls.emergencyContactNo.dirty">
+                <p style="color:red">Alternate Mobile Number is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+              <label for="bloodGroup" class="required">Blood Group</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">19</span>
+                <select class="form-control iconclass" formControlName="bloodGroup"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.bloodGroup.invalid && additionalForm.controls.bloodGroup.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null" selected>Select Blood Group</option>
+                  <option *ngFor="let o of bloodgrpList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.bloodGroup.invalid && additionalForm.controls.bloodGroup.dirty">
+                <p style="color:red">Blood Group is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+              <label for="nationalityId" class="required">Nationality</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">20</span>
+                <select class="form-control iconclass" formControlName="nationalityId"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.nationalityId.invalid && additionalForm.controls.nationalityId.dirty, 'has-success': additionalForm.controls.nationalityId.valid && additionalForm.controls.nationalityId.dirty }"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select Nationality</option>
+                  <option *ngFor="let o of nationalityList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.nationalityId.invalid && additionalForm.controls.nationalityId.dirty">
+                <p style="color:red">Nationality is required.</p>
+              </div>
+            </div>
+            <!-------------------new field-------------------------->
+
+            <div class="ui-g-12 ui-md-4">
+              <label for="maritialStatus" class="required">Marital Status</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">21</span>
+                <select class="form-control iconclass" formControlName="maritialStatus"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.maritialStatus.invalid && additionalForm.controls.maritialStatus.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null" selected>Select</option>
+                  <option *ngFor="let o of maritialStatus" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.maritialStatus.invalid && additionalForm.controls.maritialStatus.dirty">
+                <p style="color:red">Marital Status is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-4">
+              <label for="isMinority" class="required">Minority group</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">22</span>
+                <select class="form-control iconclass" formControlName="isMinority" (change)="checkMinorityType()"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.isMinority.invalid && additionalForm.controls.isMinority.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null" selected>Select</option>
+                  <option *ngFor="let o of genericList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.isMinority.invalid && additionalForm.controls.isMinority.dirty">
+                <p style="color:red">Minority group is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-4">
+              <label for="minorityid" [ngClass]="{'required': !typeMinority}">Type of Minority Group</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">23</span>
+                <select class="form-control iconclass" formControlName="minorityid"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.minorityid.invalid && additionalForm.controls.minorityid.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select</option>
+                  <option *ngFor="let o of minorityList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.minorityid.invalid && additionalForm.controls.minorityid.dirty">
+                <p style="color:red">Type of Minority Group is required.</p>
+              </div>
+            </div>
+
+
+            <!-- <div class="ui-g-12 ui-md-4">
+              <label for="firstGenerationLerner" class="required">First generation Learner</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">23</span>
+                <select class="form-control iconclass" formControlName="firstGenerationLerner"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.firstGenerationLerner.invalid && additionalForm.controls.firstGenerationLerner.dirty, 'has-success': additionalForm.controls.firstGenerationLerner.valid && additionalForm.controls.firstGenerationLerner.dirty }"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select</option>
+                  <option *ngFor="let o of genericList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.firstGenerationLerner.invalid && additionalForm.controls.firstGenerationLerner.dirty">
+                <p style="color:red">First generation Learner is required.</p>
+              </div>
+            </div> -->
+            <!-----------------------new field-------------------------------->
+            <div class="ui-g-12 ui-md-4">
+              <label for="religionId" class="required">Religion</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">24</span>
+                <select class="form-control iconclass" formControlName="religionId"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.religionId.invalid && additionalForm.controls.religionId.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select Religion</option>
+                  <option *ngFor="let o of religionList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.religionId.invalid && additionalForm.controls.religionId.dirty">
+                <p style="color:red">Religion is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-4">
+              <label for="studentpanno">Student PAN Number</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">25</span>
+                <input type="text" class="form-control" formControlName="studentpanno" placeholder="PAN Number"
+                  pInputText [style.text-transform]="'uppercase'">
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-4">
+              <label for="adhaarcardno" class="required">Student Aadhar Number</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">26</span>
+                <p-inputMask class="form-control" formControlName="adhaarcardno" mask="9999 9999 9999"
+                  placeholder="12 digit Aadhar Number e.g - 9999 9999 9999"></p-inputMask>
+              </div>
+              <div *ngIf="additionalForm.controls.adhaarcardno.invalid && additionalForm.controls.adhaarcardno.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="handicapped" class="required">Physically Challenged</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">27</span>
+                <select class="form-control iconclass" formControlName="handicapped" (change)="enableHanidcapType()"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.handicapped.invalid && additionalForm.controls.handicapped.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select Physically Challenged</option>
+                  <option *ngFor="let o of genericList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.handicapped.invalid && additionalForm.controls.handicapped.dirty">
+                <p style="color:red">Physically Challenged is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="handicaptype" [ngClass]="{'required': !enablePhType}">Type of Physically Challenged</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">28</span>
+                <select class="form-control iconclass" formControlName="handicaptype"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.handicaptype.invalid && additionalForm.controls.handicaptype.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select Type of Physically Challenged</option>
+                  <option *ngFor="let o of phList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.handicaptype.invalid && additionalForm.controls.handicaptype.dirty">
+                <p style="color:red">Type of Physically Challenged is required.</p>
+              </div>
+            </div>
+
+            <!---------------------------new-------------------------------------->
+
+            <div class="ui-g-12 ui-md-3">
+              <label for="fatherName" [ngClass]="{'required': isflabel}">Father's Name</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">29</span>
+                <input type="text" class="form-control" appInputRestriction="noSpecialChars"
+                  (keypress)="avoidNumber($event)" formControlName="fatherName" [readonly]="isFather"
+                  placeholder="As per Class XII Board Admit Card"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.fatherName.invalid && additionalForm.controls.fatherName.dirty}"
+                  pInputText [style.text-transform]="'uppercase'">
+              </div>
+              <div *ngIf="additionalForm.controls.fatherName.invalid && additionalForm.controls.fatherName.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-3">
+              <label for="famOccupationId" [ngClass]="{'required': isflabel}">Father's Occupation</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">30</span>
+                <select class="form-control iconclass" formControlName="famOccupationId"
+                  [attr.disabled]="isFather?true:null" (change)="isSingleParent()"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.famOccupationId.invalid && additionalForm.controls.famOccupationId.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select</option>
+                  <option *ngFor="let o of occupationList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.famOccupationId.invalid && additionalForm.controls.famOccupationId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-3">
+              <label for="fatherContactno" [ngClass]="{'required': isflabel}">Father's contact No.</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">31</span>
+                <input type="text" class="form-control" maxlength="10" appInputRestriction="integer"
+                  formControlName="fatherContactno" [readonly]="isFather"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.fatherContactno.invalid && additionalForm.controls.fatherContactno.dirty}"
+                  pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.fatherContactno.invalid && additionalForm.controls.fatherContactno.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-3">
+              <label for="fatherEmail">Father's Email</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">32</span>
+                <input type="text" class="form-control" formControlName="fatherEmail" [readonly]="isFather"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.fatherEmail.invalid && additionalForm.controls.fatherEmail.dirty}"
+                  pInputText>
+              </div>
+            </div>
+
+            <!------------------------------new----------------------------------- -->
+            <!-- <div class="ui-g-12 ui-md-6">
+              <label for="mTitle" [ngClass]="{'required': ismlabel}">Select Title(Mother's Name)</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">34</span>
+                <select class="form-control iconclass" formControlName="mTitle" [attr.disabled]="isMother?true:null"
+                  (change)="isSingleParent()"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.mTitle.invalid && additionalForm.controls.mTitle.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select Title</option>
+                  <option *ngFor="let o of femaleTitleList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.mTitle.invalid && additionalForm.controls.mTitle.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div> -->
+            <div class="ui-g-12 ui-md-3">
+              <label for="motherName" [ngClass]="{'required': ismlabel}">Mother's Name</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">33</span>
+                <input type="text" class="form-control" appInputRestriction="noSpecialChars"
+                  (keypress)="avoidNumber($event)" formControlName="motherName"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.motherName.invalid && additionalForm.controls.motherName.dirty}"
+                  [readonly]="isMother" placeholder="As per Class XII Board Admit Card" pInputText
+                  [style.text-transform]="'uppercase'">
+              </div>
+              <div *ngIf="additionalForm.controls.motherName.invalid && additionalForm.controls.motherName.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <!---------------------------new-------------------------------------->
+            <div class="ui-g-12 ui-md-3">
+              <label for="motherOccupationId" [ngClass]="{'required': ismlabel}">Mother's Occupation</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">34</span>
+                <select class="form-control iconclass" formControlName="motherOccupationId"
+                  [attr.disabled]="isMother?true:null" (change)="isSingleParent()"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.motherOccupationId.invalid && additionalForm.controls.motherOccupationId.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select</option>
+                  <option *ngFor="let o of occupationList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.motherOccupationId.invalid && additionalForm.controls.motherOccupationId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-3">
+              <label for="motherContactNo">Mother's contact No.</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">35</span>
+                <input type="text" class="form-control" appInputRestriction="integer" maxlength="10"
+                  formControlName="motherContactNo" [readonly]="isMother"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.motherContactNo.invalid && additionalForm.controls.motherContactNo.dirty}"
+                  pInputText>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-3">
+              <label for="motherEmail">Mother's Email</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">36</span>
+                <input type="text" class="form-control" formControlName="motherEmail" [readonly]="isMother"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.motherEmail.invalid && additionalForm.controls.motherEmail.dirty}"
+                  pInputText>
+              </div>
+            </div>
+
+            <!------------------------------new------------------------------------->
+            <!------------------------------------------------Permanent Adreess--------------------------------------------------- -->
+            <div class="ui-g-12">
+              <label for="parmanentAddress" class="required"><b>Permanent Address</b></label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">37</span>
+                <textarea [rows]="2" placeholder="Address" [cols]="30" formControlName="parmanentAddress" pInputTextarea
+                  class="form-control" autoResize="autoResize"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.parmanentAddress.invalid && additionalForm.controls.parmanentAddress.dirty, 'has-success': additionalForm.controls.parmanentAddress.valid && additionalForm.controls.parmanentAddress.dirty }"></textarea>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.parmanentAddress.invalid && additionalForm.controls.parmanentAddress.dirty">
+                <p style="color:red">Residential Address is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12">
+              <label for="countryId" class="required">Select Country</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">38</span>
+                <select class="form-control" formControlName="countryId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.countryId.invalid && additionalForm.controls.countryId.dirty}"
+                  (change)="getStateCityPermanent(this.additionalForm.value.countryId,'-','-')">
+                  <option [ngValue]="null">Select Country</option>
+                  <option *ngFor="let o of allcountrylist" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.countryId.invalid && additionalForm.controls.countryId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <!-- localguardianStateId -->
+            <div class="ui-g-12 ui-md-6">
+              <label for="resiStateId" class="required">Select State</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">39(i)</span>
+                <select class="form-control" formControlName="resiStateId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.resiStateId.invalid && additionalForm.controls.resiStateId.dirty}"
+                  (change)="getStateCityPermanent(this.additionalForm.value.countryId,this.additionalForm.value.resiStateId,'-');enableOtherStatePermanent()">
+                  <option [ngValue]="null">Select State</option>
+                  <option *ngFor="let o of stateListPer" [value]="o.id">{{o.name}}</option>
+                  <option [value]="-1">Other</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.resiStateId.invalid && additionalForm.controls.resiStateId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="otherState" [ngClass]="{'required': !isOtherStatePerm}">Other State</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">39(ii)</span>
+                <input type="text" class="form-control" [readonly]="isOtherStatePerm"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.otherState.invalid && additionalForm.controls.otherState.dirty}"
+                  formControlName="otherState" placeholder="Other State" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.otherState.invalid && additionalForm.controls.otherState.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="cityId" class="required">Select City</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">40(i)</span>
+                <select class="form-control" formControlName="cityId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.cityId.invalid && additionalForm.controls.cityId.dirty}"
+                  (change)="getStateCityPermanent(this.additionalForm.value.countryId,this.additionalForm.value.resiStateId,this.additionalForm.value.cityId);enableOtherCityPermanent()">
+                  <option [ngValue]="null">Select City</option>
+                  <option *ngFor="let o of cityListPer" [value]="o.id">{{o.name}}</option>
+                  <option [value]="-1">Other</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.cityId.invalid && additionalForm.controls.cityId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="otherCity" [ngClass]="{'required': !isOtherCityPerm}">Other City</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">40(ii)</span>
+                <input type="text" class="form-control" [readonly]="isOtherCityPerm" formControlName="otherCity"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.otherCity.invalid && additionalForm.controls.otherCity.dirty}"
+                  placeholder="Other City" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.otherCity.invalid && additionalForm.controls.otherCity.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+
+            <!-- new entry by jd date -16.8.24 -->
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="resiDistrictId" class="required">Select District</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">41(i)</span>
+                <select class="form-control" formControlName="resiDistrictId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.resiDistrictId.invalid && additionalForm.controls.resiDistrictId.dirty}"
+                  (change)="enableOtherDistrictPermanent()">
+                  <option [ngValue]="null">Select District</option>
+                  <option *ngFor="let o of districtListPer" [value]="o.id">{{o.name}}</option>
+                  <option [value]="-1">Other</option>
+                </select>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.resiDistrictId.invalid && additionalForm.controls.resiDistrictId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="otherresiDistrict" [ngClass]="{'required': !isOtherDistrictPerm}">Other District</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">41(ii)</span>
+                <input type="text" class="form-control" [readonly]="isOtherDistrictPerm"
+                  formControlName="otherresiDistrict"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.otherresiDistrict.invalid && additionalForm.controls.otherresiDistrict.dirty}"
+                  placeholder="Other District" pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.otherresiDistrict.invalid && additionalForm.controls.otherresiDistrict.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="postOfficeper" class="required">Post Office</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">42</span>
+                <input type="text" class="form-control" formControlName="postOfficeper"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.postOfficeper.invalid && additionalForm.controls.postOfficeper.dirty}"
+                  placeholder="Post Office" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.postOfficeper.invalid && additionalForm.controls.postOfficeper.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="policeStationper" class="required">Police Station</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">43</span>
+                <input type="text" class="form-control" formControlName="policeStationper"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.policeStationper.invalid && additionalForm.controls.policeStationper.dirty}"
+                  placeholder="Police Station" pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.policeStationper.invalid && additionalForm.controls.policeStationper.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+
+
+            <div class="ui-g-12">
+              <label for="resiPinNo" class="required">Pin</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">44</span>
+                <input type="text" class="form-control" appInputRestriction="integer" maxlength="6"
+                  formControlName="resiPinNo"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.resiPinNo.invalid && additionalForm.controls.resiPinNo.dirty}"
+                  placeholder="Pin" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.resiPinNo.invalid && additionalForm.controls.resiPinNo.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <!-- new by jd.... date- 24.5.23 -->
+
+
+            <!-- ---------------------------------------------------------------------------------------------------------------- -->
+            <div class="ui-g-12">
+              <hr style="border-top: 2px solid #5C6BC0;">
+            </div>
+            <!------------------------------------------------Present Adreess--------------------------------------------------- -->
+            <div class="ui-g-12 ui-md-6">
+              <!-- <p-checkbox label="Same as Permanent?" binary="true" (onChange)="changeStatus($event)"></p-checkbox> -->
+              <label><b>Same as Permanent Address</b></label>
+              <input type="checkbox" (change)="changeStatus($event.target.checked)">
+            </div>
+
+            <div class="ui-g-12">
+              <label for="mailingAddress" class="required"><b>Present Address</b></label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">45</span>
+                <textarea [rows]="2" placeholder="Address" [cols]="30" formControlName="mailingAddress" pInputTextarea
+                  class="form-control" autoResize="autoResize"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.mailingAddress.invalid && additionalForm.controls.mailingAddress.dirty, 'has-success': additionalForm.controls.mailingAddress.valid && additionalForm.controls.mailingAddress.dirty }"></textarea>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.mailingAddress.invalid && additionalForm.controls.mailingAddress.dirty">
+                <p style="color:red">Residential Address is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12">
+              <label for="newcountryId" class="required">Select Country</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">46</span>
+                <select class="form-control" formControlName="newcountryId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.newcountryId.invalid && additionalForm.controls.newcountryId.dirty}"
+                  (change)="getStateCity(this.additionalForm.value.newcountryId,'-','-')">
+                  <option [ngValue]="null">Select Country</option>
+                  <option *ngFor="let o of allcountrylist" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.newcountryId.invalid && additionalForm.controls.newcountryId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="ewstateId" class="required">Select State</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">47(i)</span>
+                <select class="form-control" formControlName="newstateId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.newstateId.invalid && additionalForm.controls.newstateId.dirty}"
+                  (change)="getStateCity(this.additionalForm.value.newcountryId,this.additionalForm.value.newstateId,'-');enableOtherState()">
+                  <option [ngValue]="null">Select State</option>
+                  <option *ngFor="let o of stateList" [value]="o.id">{{o.name}}</option>
+                  <option [value]="-1">Other</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.newstateId.invalid && additionalForm.controls.newstateId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="othernewState" [ngClass]="{'required': !isOtherState}">Other State</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">47(ii)</span>
+                <input type="text" class="form-control" [readonly]="isOtherState"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.othernewState.invalid && additionalForm.controls.othernewState.dirty}"
+                  formControlName="othernewState" placeholder="Other State" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.othernewState.invalid && additionalForm.controls.othernewState.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="newcityId" class="required">Select City</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">48(i)</span>
+                <select class="form-control" formControlName="newcityId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.newcityId.invalid && additionalForm.controls.newcityId.dirty}"
+                  (change)="getStateCity(this.additionalForm.value.newcountryId,this.additionalForm.value.newstateId,this.additionalForm.value.newcityId);enableOtherCity()">
+                  <option [ngValue]="null">Select City</option>
+                  <option *ngFor="let o of cityList" [value]="o.id">{{o.name}}</option>
+                  <option [value]="-1">Other</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.newcityId.invalid && additionalForm.controls.newcityId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="othernewCity" [ngClass]="{'required': !isOtherCity}">Other City</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">48(ii)</span>
+                <input type="text" class="form-control" [readonly]="isOtherCity" formControlName="othernewCity"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.othernewCity.invalid && additionalForm.controls.othernewCity.dirty}"
+                  placeholder="Other City" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.othernewCity.invalid && additionalForm.controls.othernewCity.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <!-- new entry by jd date-16.8.24 -->
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="newDistrictId" class="required">Select District</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">49(i)</span>
+                <select class="form-control" formControlName="newDistrictId"
+                  style="width:100%!important;background-color:white"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.newDistrictId.invalid && additionalForm.controls.newDistrictId.dirty}"
+                  (change)="enableOtherDistrictPresent()">
+                  <option [ngValue]="null">Select District</option>
+                  <option *ngFor="let o of districtList" [value]="o.id">{{o.name}}</option>
+                  <option [value]="-1">Other</option>
+                </select>
+              </div>
+              <div *ngIf="additionalForm.controls.newDistrictId.invalid && additionalForm.controls.newDistrictId.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="othernewDistrict" [ngClass]="{'required': !isOtherDistrictPrsnt}">Other District</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">49(ii)</span>
+                <input type="text" class="form-control" [readonly]="isOtherDistrictPrsnt"
+                  formControlName="othernewDistrict"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.othernewDistrict.invalid && additionalForm.controls.othernewDistrict.dirty}"
+                  placeholder="Other District" pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.othernewDistrict.invalid && additionalForm.controls.othernewDistrict.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="postOfficeprsnt" class="required">Post Office</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">50</span>
+                <input type="text" class="form-control"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.postOfficeprsnt.invalid && additionalForm.controls.postOfficeprsnt.dirty}"
+                  formControlName="postOfficeprsnt" placeholder="Post Office" pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.postOfficeprsnt.invalid && additionalForm.controls.postOfficeprsnt.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="policeStationprsnt" class="required">Police Station</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">51</span>
+                <input type="text" class="form-control"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.policeStationprsnt.invalid && additionalForm.controls.policeStationprsnt.dirty}"
+                  formControlName="policeStationprsnt" placeholder="Police Station" pInputText>
+              </div>
+              <div
+                *ngIf="additionalForm.controls.policeStationprsnt.invalid && additionalForm.controls.policeStationprsnt.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <!-- end -->
+
+            <div class="ui-g-12">
+              <label for="newresipinno" class="required">Pin</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">52</span>
+                <input type="text" class="form-control" appInputRestriction="integer" maxlength="6"
+                  formControlName="newresipinno"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.newresipinno.invalid && additionalForm.controls.newresipinno.dirty}"
+                  placeholder="Pin" pInputText>
+              </div>
+              <div *ngIf="additionalForm.controls.newresipinno.invalid && additionalForm.controls.newresipinno.dirty">
+                <p style="color:red">This field is required.</p>
+              </div>
+            </div>
+            <!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+
+            <!----------------------------------------------------guardian---------------------------------------------------------------->
+
+
+            <div class="ui-g-12">
+              <label><b>Local Guardian Details</b></label>
+            </div>
+            <div class="ui-g-12 ui-md-3">
+              <label for="relationToGuardian">Relation to Guardian</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">53</span>
+                <!--<input type="text" class="form-control" formControlName="relationToGuardian"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.relationToGuardian.invalid && additionalForm.controls.relationToGuardian.dirty}"
+                  pInputText>-->
+
+                <select class="form-control iconclass" formControlName="relationToGuardian"
+                  style="width:100%!important;background-color:white"
+                  (change)='onchangesetparentstogrdn($event.target.value)'>
+                  <option [ngValue]="null">Select</option>
+                  <option *ngFor="let o of relationtoapplicantList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-3">
+              <label for="localGuardianname">Guardian's Name</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">54</span>
+                <input type="text" class="form-control" appInputRestriction="noSpecialChars"
+                  (keypress)="avoidNumber($event)" formControlName="localGuardianname"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.localGuardianname.invalid && additionalForm.controls.localGuardianname.dirty}"
+                  pInputText [style.text-transform]="'uppercase'">
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-3">
+              <label for="localguardianoccupation">Guardian Occupation</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">55</span>
+                <select class="form-control iconclass" formControlName="localguardianoccupation"
+                  style="width:100%!important;background-color:white">
+                  <option [ngValue]="null">Select</option>
+                  <option *ngFor="let o of occupationList" [value]="o.id">{{o.name}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-3">
+              <label for="localguardianphoneNo">Guardian Contact No</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">56</span>
+                <input type="text" class="form-control" maxlength="10" appInputRestriction="integer"
+                  formControlName="localguardianphoneNo"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.localguardianphoneNo.invalid && additionalForm.controls.localguardianphoneNo.dirty}"
+                  pInputText [style.text-transform]="'uppercase'">
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="monthlyfamilyIncome" class="required">Monthly Family Income</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">57</span>
+                <input type="number" (blur)="multiplyIncome($event)" placeholder="Monthly Family Income"
+                  formControlName="monthlyfamilyIncome" pInputTextarea class="form-control" autoResize="autoResize"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.monthlyfamilyIncome.invalid && additionalForm.controls.monthlyfamilyIncome.dirty, 'has-success': additionalForm.controls.monthlyfamilyIncome.valid && additionalForm.controls.monthlyfamilyIncome.dirty }">
+              </div>
+              <div
+                *ngIf="additionalForm.controls.monthlyfamilyIncome.invalid && additionalForm.controls.monthlyfamilyIncome.dirty">
+                <p style="color:red">Monthly Family Income is required.</p>
+              </div>
+            </div>
+
+
+            <div class="ui-g-12 ui-md-6">
+              <label for="familyIncome" class="required">Annual Family Income</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">58</span>
+                <!-- <select class="form-control iconclass" formControlName="familyIncome"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.familyIncome.invalid && additionalForm.controls.familyIncome.dirty}"
+                  style="width:100%!important;background-color:white" required>
+                  <option [ngValue]="null">Select Annual Family Income</option>
+                  <option *ngFor="let o of familyIncomeList" [value]="o.id">{{o.name}}</option>
+                </select> -->
+
+                <input type="number" placeholder="Annual Family Income" readonly formControlName="familyIncome"
+                  pInputTextarea class="form-control" autoResize="autoResize"
+                  [ngClass]="{ 'ui-state-error': additionalForm.controls.familyIncome.invalid && additionalForm.controls.familyIncome.dirty, 'has-success': additionalForm.controls.familyIncome.valid && additionalForm.controls.familyIncome.dirty }">
+              </div>
+              <div *ngIf="additionalForm.controls.familyIncome.invalid && additionalForm.controls.familyIncome.dirty">
+                <p style="color:red">Annual Family Income is required.</p>
+              </div>
+            </div>
+
+            <div class="ui-g-12">
+              <label for="photo" class="required">Photo</label>
+              <div class="card no-margin no-padding">
+                <div class="ui-inputgroup">
+                  <span class="ui-inputgroup-addon">59</span>
+                  <p-fileUpload (onSelect)="onFileSelected($event, 'photo')" mode="basic" accept="image/*"></p-fileUpload>
+                </div>
+              </div>
+              <div *ngIf="imageUrl" style="margin-top: 20px;">
+                <img [src]="imageUrl" alt="Uploaded Image" style="width:50px; height:50px" />
+              </div>
+            </div>
+
+            <!-- <div class="ui-g form-group">
+              <div class="ui-g-12 ui-md-8">
+                <p-fileUpload name="myFile[]"
+                  accept=".jpg,.JPG" maxFileSize="10000000" customUpload="true" auto="auto"
+                  (uploadHandler)="myUploadersign($event,'photo')" (onUpload)="onUpload($event)"
+                  (onBeforeSend)="onBeforeSend($event)">
+                  <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                      <li *ngFor="let file of uploadedFiles">{{file.name}}</li>
+                    </ul>
+                  </ng-template>
+                </p-fileUpload>
+              </div>
+              <div *ngIf="imageUrl" style="margin-top: 20px;">
+                <img [src]="imageUrl" alt="Uploaded Image" style="width:50px; height:50px" />
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+
+      <div class="ui-g-12" *ngIf="!disablesubmit">
+        <div class="card no-margin no-padding">
+          <button type="submit" label="Submit" class="indigo-btn btn-lg" pButton></button>
+        </div>
+      </div>
+      <div class="ui-g-12" *ngIf="showclose">
+        <div class="card no-margin no-padding">
+          <!-- {{this.academicForm.value|json}} -->
+          <button type="button" label="Go to Dashboard" class="indigo-btn btn-lg" (click)="goToDashboard()"
+            pButton></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
