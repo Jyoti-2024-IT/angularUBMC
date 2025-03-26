@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
@@ -17,7 +17,6 @@ export class CourseApplicationComponent implements OnInit {
   msgs: Message[] = [];
   msgsResponse: Message[] = [];
   cols: any[];
-  courseOptions: any[];
   showclose: boolean = false;
   disablesubmit: boolean = false;
   dataList: any = [];
@@ -25,12 +24,19 @@ export class CourseApplicationComponent implements OnInit {
   amount: any;
   displayCourseNonEligible: boolean = false;
   nonEligiblemsg: any;
+  selectedPreference: any;
+  preferenceOptions: any[] = [];
+  quantityOptions: any[] = [];
+  courses: any[] = [];
+  preferenceData: any[] = [];
+  duplicateCourseSelection: any[] = [];
 
   constructor(
     private registrationService: RegistrationService,
     private confirmationService: ConfirmationService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -52,17 +58,18 @@ export class CourseApplicationComponent implements OnInit {
     this.msgsResponse = [];
     this.autoLogin();
     this.getEligibleCourseList();
-    this.cols = [
-      { field: 'srl', header: 'Srl.' },
-      { field: 'coursenm', header: 'Course / Session Opted For' },
-      { field: 'amount', header: 'Total Application Fees to Pay	(Rs.)' }
-    ];
+    // this.cols = [
+    //   { field: 'srl', header: 'Srl.' },
+    //   { field: 'coursenm', header: 'Course / Session Opted For' },
+    //   { field: 'amount', header: 'Total Application Fees to Pay	(Rs.)' }
+    // ];
 
-    this.courseOptions = [
+    this.preferenceOptions = [
       { id: 1, name: 'First Preference' },
       { id: 2, name: 'Second Preference' },
       { id: 3, name: 'Third Preference' }
     ];
+
     // if (localStorage.getItem('step') == '') {
     // 	this.showclose = true;
     // }
@@ -70,6 +77,13 @@ export class CourseApplicationComponent implements OnInit {
     // if (localStorage.getItem('meritlisted') === "yes") {
     // 	this.disablesubmit = true;
     // }
+
+    this.preferenceData = [
+      { selectedPreference: null, selectedCourse: null },
+      { selectedPreference: null, selectedCourse: null },
+      { selectedPreference: null, selectedCourse: null }
+    ];
+
   }
 
   autoLogin() {
@@ -99,6 +113,8 @@ export class CourseApplicationComponent implements OnInit {
         this.dataList = data;
         if (this.dataList.status == 'success') {
           this.tableData = this.dataList.CoursesList;
+          console.log(this.tableData);
+
           this.amount = this.dataList.amount;
           this.spinner.hide();
           // if (this.tableData.length === 0) {
@@ -120,13 +136,41 @@ export class CourseApplicationComponent implements OnInit {
       });
   }
   // acceptcourse() {
-	// 	this.displayCourseNonEligible = false;
-	// 	this.router.navigate(['admission/academic-information']);
-	// }
-	// rejectcourse() {
-	// 	this.displayCourseNonEligible = false;
-	// 	this.router.navigate(['']);
-	// }
+  // 	this.displayCourseNonEligible = false;
+  // 	this.router.navigate(['admission/academic-information']);
+  // }
+  // rejectcourse() {
+  // 	this.displayCourseNonEligible = false;
+  // 	this.router.navigate(['']);
+  // }
+
+  onSelectionChange(row, index) {
+    // console.log(`Row ${index + 1} selection changed: Preference - ${row.selectedPreference.id}, Course - ${row.selectedCourse.courseid}`);
+  }
+  onCourseSelectionChange(row, index) {
+    const selectedCourse = row.selectedCourse;
+    const courseExists = this.duplicateCourseSelection.some(course => course.courseid === selectedCourse.courseid);
+    if (courseExists) { 
+      this.cdr.detectChanges();
+      row.selectedCourse = null;
+      this.preferenceData[index].selectedCourse = null;
+      alert('This course has already been selected! Please choose a different course.');
+    } else {
+      this.duplicateCourseSelection.push(selectedCourse);
+    }
+  }
+
+  submit() {
+    console.log('Submitted Data:', this.preferenceData);
+    const allSelected = this.preferenceData.every(row => row.selectedPreference && row.selectedCourse);
+    if (allSelected) {
+      console.log('Submitted Data:', this.preferenceData);
+    } else {
+      alert('Please select a preference and course for all rows.');
+    }
+
+  }
+
 
 
 }

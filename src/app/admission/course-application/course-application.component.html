@@ -10,6 +10,49 @@
       <div class="card">
         <h1>Step 3 of 5 - Course Selection (Sr. No. 17)</h1>
         <h3>17. Course Selection</h3>
+
+        <p-table [value]="preferenceData" [paginator]="true" [rows]="3">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Sl No.</th>
+              <th>Preference</th>
+              <th>Course</th>
+            </tr>
+          </ng-template>
+        
+          <ng-template pTemplate="body" let-row let-i="rowIndex">
+            <tr>
+              <td>{{ i + 1 }}.</td>
+
+              <td>
+                <p-dropdown
+                  [options]="preferenceOptions"
+                  [(ngModel)]="row.selectedPreference"
+                  optionLabel="name"
+                  placeholder="Select Preference"
+                  (onChange)="onSelectionChange(row, i)"
+                ></p-dropdown>
+              </td>
+              <td>
+                <p-dropdown
+                [options]="tableData"
+                [(ngModel)]="row.selectedCourse"
+                optionLabel="coursenm"
+                placeholder="Select Course"
+                (onChange)="onCourseSelectionChange(row, i)"
+              ></p-dropdown>              
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <button pButton 
+                type="button" 
+                label="Submit" 
+                class="p-button-raised p-button-danger w-100" 
+                (click)="submit()">
+        </button>
+        
       </div>
     </div>
   </div>
